@@ -44,7 +44,7 @@ Before you submit a pull request, please make sure you have to following:
 - [ ] Changes are complete (i.e. I finished coding on this PR)
 - [ ] All changes have test coverage and al tests passing
 - [ ] Code is well-documented (extended the README / documentation, if necessary)
-- [ ] If this PR is your first one, add your name and github account to [AUTHORS.md](https://github.com/bigdata-ustc/EduData/blob/master/AUTHORS.md)
+- [ ] If this PR is your first one, add your name and github account to [AUTHORS.md](../blob/master/AUTHORS.md)
 
 ## Comments ##
 - If this change is a backward incompatible change, why must this change be made.
