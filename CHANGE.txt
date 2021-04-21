@@ -1,5 +1,5 @@
 v0.0.2:
-    * add KPT/EKPT
+    * add KPT, EKPT
 
 v0.0.1:
     * Add meta class
