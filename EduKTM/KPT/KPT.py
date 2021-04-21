@@ -31,18 +31,27 @@ def stu_curve(u_latent, alpha, r, D, deltaT, S, time_freq):  # learning and forg
 
 class KPT(KTM):
     """
-        (E)KPT model, training (MAP) and testing methods
-        :param mode (str): mode = 'KPT' or 'EKPT'
-        :param q_m (array): Q matrix, shape = (prob_num, know_num)
-        :param stu_num (int): number of students
-        :param prob_num (int): number of problems
-        :param know_num (int): number of knowledge
-        :param time_window_num (int): number of time windows
-        :param init_array (array): initialize students' latent vectors with specific array, shape = (stu_num, know_num)
-        :param args: all hyper-parameters
+    (E)KPT model, training (MAP) and testing methods
+    Parameters
+    ----------
+    mode: str
+        mode = 'KPT' or 'EKPT'
+    q_m: array
+        Q matrix, shape = (prob_num, know_num)
+    stu_num: int
+        number of students
+    prob_num: int
+        number of problems
+    know_num: int
+        number of knowledge
+    time_window_num: int
+        number of time windows
+    args: namedtuple
+        all hyper-parameters
+    ----------
     """
 
-    def __init__(self, mode, q_m, stu_num, prob_num, know_num, time_window_num=1, args=default_hyper):
+    def __init__(self, mode, q_m, stu_num, prob_num, know_num, time_window_num, args=default_hyper):
         super(KPT, self).__init__()
         self.mode = mode
         self.args = args
