@@ -11,6 +11,9 @@ The Model Zoo of Knowledge Tracing  Models
 
 ## List of models
 
+* [KPT,EKPT](EduKTM/KPT) [[doc]](docs/KPT.md) [[example]](examples/KPT)
+* [DKT](EduKTM/DKT) [[doc]](docs/DKT.md) [[example]](examples/DKT)
+
 ## Contribute
 
 EduKTM is still under development. More algorithms and features are going to be added and we always welcome contributions to help make EduKTM better. If you would like to contribute, please follow this [guideline](CONTRIBUTE.md).
