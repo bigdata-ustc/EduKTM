@@ -4,7 +4,6 @@
 [![codecov](https://codecov.io/gh/bigdata-ustc/EduKTM/branch/main/graph/badge.svg?token=B7gscOGQLD)](https://codecov.io/gh/bigdata-ustc/EduKTM)
 [![Download](https://img.shields.io/pypi/dm/EduKTM.svg?style=flat)](https://pypi.python.org/pypi/EduKTM)
 [![License](https://img.shields.io/github/license/bigdata-ustc/EduKTM)](LICENSE)
-[![DOI](https://zenodo.org/badge/348569820.svg)](https://zenodo.org/badge/latestdoi/348569820)
 
 The Model Zoo of Knowledge Tracing  Models
 
@@ -13,6 +12,7 @@ The Model Zoo of Knowledge Tracing  Models
 ## List of models
 
 * [KPT,EKPT](EduKTM/KPT) [[doc]](docs/KPT.md) [[example]](examples/KPT)
+* [DKT](EduKTM/DKT) [[doc]](docs/DKT.md) [[example]](examples/DKT)
 
 ## Contribute
 
