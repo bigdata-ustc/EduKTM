@@ -1,3 +1,6 @@
+v0.0.3:
+    * add DKT
+    
 v0.0.2:
     * add KPT, EKPT
 
