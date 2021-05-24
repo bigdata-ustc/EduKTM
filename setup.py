@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 test_deps = [
     'pytest>=4',
@@ -8,10 +8,11 @@ test_deps = [
 
 setup(
     name='EduKTM',
-    version='0.0.3',
+    version='0.0.4',
     extras_require={
         'test': test_deps,
     },
+    packages=find_packages(),
     install_requires=[
         "torch",
         "tqdm",

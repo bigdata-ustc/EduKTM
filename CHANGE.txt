@@ -1,3 +1,6 @@
+v0.0.4:
+   * fix potential ModuleNotFoundError
+
 v0.0.3:
     * add DKT
     
