@@ -7,7 +7,7 @@ from tqdm import tqdm
 from EduKTM.utils.torch_utils import PadSequence, FixedBucketSampler
 
 
-def extract(data_src):
+def extract(data_src):  # pragma: no cover
     responses = []
     step = 200
     with open(data_src) as f:
@@ -40,7 +40,7 @@ def transform(raw_data, batch_size, num_buckets=100):
         batch_labels = []
         for idx in batch_idx:
             batch_rs.append([index(r) for r in responses[idx]])
-            if len(responses[idx]) <= 1:
+            if len(responses[idx]) <= 1:  # pragma: no cover
                 pick_index, labels = [], []
             else:
                 pick_index, labels = zip(*[(r[0], 0 if r[1] <= 0 else 1) for r in responses[idx][1:]])
@@ -64,6 +64,6 @@ def transform(raw_data, batch_size, num_buckets=100):
     return batch
 
 
-def etl(data_src, batch_size, **kwargs):
+def etl(data_src, batch_size, **kwargs):  # pragma: no cover
     raw_data = extract(data_src)
     return transform(raw_data, batch_size, **kwargs)
