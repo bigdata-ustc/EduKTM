@@ -4,3 +4,4 @@
 from .meta import KTM
 from .KPT import KPT
 from .DKT import DKT
+from .DKTPlus import DKTPlus
