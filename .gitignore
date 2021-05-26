@@ -110,3 +110,4 @@ venv.bak/
 .pyre/
 
 # User Definition
+data/
