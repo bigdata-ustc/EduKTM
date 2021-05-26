@@ -14,6 +14,7 @@ The Model Zoo of Knowledge Tracing  Models
 
 * [KPT,EKPT](EduKTM/KPT) [[doc]](docs/KPT.md) [[example]](examples/KPT)
 * [DKT](EduKTM/DKT) [[doc]](docs/DKT.md) [[example]](examples/DKT)
+* [DKT+](EduKTM/DKTPlus) [[doc]](docs/DKT+.md) [[example]](examples/DKT+)
 
 ## Contribute
 
