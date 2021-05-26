@@ -16,6 +16,14 @@ class SequenceLogisticMaskLoss(nn.Module):
     """
 
     def __init__(self, lr=0.0, lw1=0.0, lw2=0.0):
+        """
+
+        Parameters
+        ----------
+        lr: reconstruction
+        lw1
+        lw2
+        """
         super(SequenceLogisticMaskLoss, self).__init__()
         self.lr = lr
         self.lw1 = lw1
