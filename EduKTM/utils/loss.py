@@ -61,7 +61,7 @@ class SequenceLogisticMaskLoss(nn.Module):
         return loss
 
 
-class LogisticMaskLoss(nn.Module):
+class LogisticMaskLoss(nn.Module):  # pragma: no cover
     """
     Notes
     -----
