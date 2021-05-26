@@ -13,17 +13,18 @@ import numpy as np
 
 
 class DKTNet(nn.Module):
-    def __init__(self, ku_num, hidden_num, add_embedding_layer=False, dropout=0.0, **kwargs):
+    def __init__(self, ku_num, hidden_num, add_embedding_layer=False, embedding_dim=None, dropout=0.0, **kwargs):
         super(DKTNet, self).__init__()
         self.ku_num = ku_num
         self.hidden_dim = hidden_num
         self.output_dim = ku_num
         if add_embedding_layer is True:
+            embedding_dim = self.hidden_dim if embedding_dim is None else embedding_dim
             self.embeddings = nn.Sequential(
-                nn.Embedding(ku_num * 2, kwargs["latent_dim"]),
+                nn.Embedding(ku_num * 2, embedding_dim),
                 nn.Dropout(kwargs.get("embedding_dropout", 0.2))
             )
-            rnn_input_dim = kwargs["latent_dim"]
+            rnn_input_dim = embedding_dim
         else:
             self.embeddings = lambda x: F.one_hot(x, num_classes=self.output_dim * 2).float()
             rnn_input_dim = ku_num * 2
