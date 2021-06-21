@@ -19,6 +19,8 @@ setup(
         "numpy>=1.16.5",
         "scikit-learn",
         "pandas",
+        "networkx",
+        "dgl"
     ],  # And any other dependencies for needs
     entry_points={
     },
