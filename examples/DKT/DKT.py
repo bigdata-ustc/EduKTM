@@ -8,7 +8,7 @@ import torch.utils.data as Data
 from EduKTM import DKT
 
 
-NUM_QUESTIONS = 124
+NUM_QUESTIONS = 123
 BATCH_SIZE = 64
 HIDDEN_SIZE = 10
 NUM_LAYERS = 1
