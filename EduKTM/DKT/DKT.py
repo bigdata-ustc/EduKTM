@@ -29,11 +29,11 @@ class Net(nn.Module):
 
 
 def process_raw_pred(raw_question_matrix, raw_pred, num_questions: int) -> tuple:
-    question_matrix = raw_question_matrix[:, 0: num_questions] + raw_question_matrix[:, num_questions:]
-    answer_pred_matrix = raw_pred[: -1].mm(question_matrix[1:].t())
-    index = torch.LongTensor([range(answer_pred_matrix.shape[0])])
-    pred = answer_pred_matrix.gather(0, index)[0]
-    truth = (((raw_question_matrix[:, 0: num_questions] - raw_question_matrix[:, num_questions:]).sum(1) + 1) // 2)[1:]
+    questions = torch.nonzero(raw_question_matrix)[1:, 1] % num_questions
+    length = questions.shape[0]
+    pred = raw_pred[: length]
+    pred = pred.gather(1, questions.view(-1, 1)).flatten()
+    truth = torch.nonzero(raw_question_matrix)[1:, 1] // num_questions
     return pred, truth
 
 
@@ -55,7 +55,8 @@ class DKT(KTM):
                 loss = torch.Tensor([0.0])
                 for student in range(batch_size):
                     pred, truth = process_raw_pred(batch[student], integrated_pred[student], self.num_questions)
-                    loss += loss_function(pred[pred > 0], truth[pred > 0])
+                    if pred.shape[0] != 0:
+                        loss += loss_function(pred, truth.float())
 
                 # back propagation
                 optimizer.zero_grad()
@@ -78,8 +79,8 @@ class DKT(KTM):
             batch_size = batch.shape[0]
             for student in range(batch_size):
                 pred, truth = process_raw_pred(batch[student], integrated_pred[student], self.num_questions)
-                y_pred = torch.cat([y_pred, pred[pred > 0]])
-                y_truth = torch.cat([y_truth, truth[pred > 0]])
+                y_pred = torch.cat([y_pred, pred])
+                y_truth = torch.cat([y_truth, truth])
 
         return roc_auc_score(y_truth.detach().numpy(), y_pred.detach().numpy())
 
