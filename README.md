@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="300" src="docs/_static/EduKTM.png">
+</p>
+
 # EduKTM
 [![PyPI](https://img.shields.io/pypi/v/EduKTM.svg)](https://pypi.python.org/pypi/EduKTM)
 [![Build Status](https://www.travis-com.org/bigdata-ustc/EduKTM.svg?branch=main)](https://www.travis-ci.com/bigdata-ustc/EduKTM)
