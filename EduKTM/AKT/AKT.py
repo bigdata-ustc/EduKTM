@@ -13,14 +13,9 @@ from .AKTNet import AKTNet
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-def binary_entropy(target, pred, mod='avg'):
+def binary_entropy(target, pred):
     loss = target * np.log(np.maximum(1e-10, pred)) + (1.0 - target) * np.log(np.maximum(1e-10, 1.0 - pred))
-    if mod == 'avg':
-        return np.average(loss) * -1.0
-    elif mod == 'sum':
-        return -loss.sum()
-    else:
-        assert False
+    return np.average(loss) * -1.0
 
 
 def compute_auc(all_target, all_pred):
@@ -177,7 +172,8 @@ def test_one_epoch(net, params, q_data, qa_data, pid_data):
 
 
 class AKT(KTM):
-    def __init__(self, n_question, n_pid, n_blocks, d_model, dropout, kq_same, l2, batch_size, maxgradnorm):
+    def __init__(self, n_question, n_pid, n_blocks, d_model, dropout, kq_same, l2, batch_size, maxgradnorm,
+                 separate_qa=False):
         super(AKT, self).__init__()
         self.params = {
             'is_pid': n_pid > 0,
@@ -186,7 +182,7 @@ class AKT(KTM):
             'maxgradnorm': maxgradnorm,
         }
         self.akt_net = AKTNet(n_question=n_question, n_pid=n_pid, n_blocks=n_blocks, d_model=d_model, dropout=dropout,
-                              kq_same=kq_same, l2=l2).to(device)
+                              kq_same=kq_same, l2=l2, separate_qa=separate_qa).to(device)
 
     def train(self, train_data, test_data=None, *, epoch: int, lr=0.002) -> ...:
         optimizer = torch.optim.Adam(self.akt_net.parameters(), lr=lr, betas=(0.0, 0.999), eps=1e-8)

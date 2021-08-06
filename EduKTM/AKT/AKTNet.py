@@ -219,19 +219,6 @@ class MultiHeadAttention(nn.Module):
         self.gammas = nn.Parameter(torch.zeros(n_heads, 1, 1))
         xavier_uniform_(self.gammas)
 
-    def _reset_parameters(self):
-        xavier_uniform_(self.k_linear.weight)
-        xavier_uniform_(self.v_linear.weight)
-        if self.kq_same is False:
-            xavier_uniform_(self.q_linear.weight)
-
-        if self.proj_bias:
-            constant_(self.k_linear.bias, 0.)
-            constant_(self.v_linear.bias, 0.)
-            if self.kq_same is False:
-                constant_(self.q_linear, 0.)
-            constant_(self.out_proj.bias, 0.)
-
     def forward(self, q, k, v, mask, zero_pad):
         bs = q.size(0)
         # perform linear operation and split into h heads
