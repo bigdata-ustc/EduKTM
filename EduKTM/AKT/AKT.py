@@ -196,10 +196,10 @@ class AKT(KTM):
             print("[Epoch %d] LogisticLoss: %.6f" % (idx, train_loss))
 
             if test_data is not None:
-                valid_loss, valid_accuracy, valid_acc = self.evel(test_data)
+                valid_loss, valid_accuracy, valid_acc = self.eval(test_data)
                 print("[Epoch %d] auc: %.6f, accuracy: %.6f" % (idx, valid_acc, valid_accuracy))
 
-    def evel(self, test_data) -> ...:
+    def eval(self, test_data) -> ...:
         self.akt_net.eval()
         return test_one_epoch(self.akt_net, self.params, *test_data)
 
