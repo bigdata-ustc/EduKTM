@@ -1,13 +1,11 @@
 # coding: utf-8
 # 2021/7/15 @ sone
 
-import logging
 import math
 
 import torch
 from torch import nn
 from torch.nn.init import xavier_uniform_, constant_
-import math
 import torch.nn.functional as F
 from enum import IntEnum
 import numpy as np
@@ -149,8 +147,10 @@ class Architecture(nn.Module):
 class TransformerLayer(nn.Module):
     def __init__(self, d_model, d_feature, d_ff, n_heads, dropout, kq_same):
         super(TransformerLayer, self).__init__()
-        """This is a Basic Block of Transformer paper. It contains one Multi-head attention object. Followed by layer 
-        norm and position wise feedforward net and dropout layer. """
+        """
+        This is a Basic Block of Transformer paper. It contains one Multi-head attention object. Followed by layer
+        norm and position wise feedforward net and dropout layer.
+        """
         kq_same = kq_same == 1
         # Multi-Head Attention Block
         self.masked_attn_head = MultiHeadAttention(d_model, d_feature, n_heads, dropout, kq_same=kq_same)
@@ -170,11 +170,13 @@ class TransformerLayer(nn.Module):
     def forward(self, mask, query, key, values, apply_pos=True):
         """
         Input:
-            block : object of type BasicBlock(nn.Module). It contains masked_attn_head objects which is of type MultiHeadAttention(nn.Module).
+            block : object of type BasicBlock(nn.Module).
+                    It contains masked_attn_head objects which is of type MultiHeadAttention(nn.Module).
             mask : 0 means, it can peek only past values. 1 means, block can peek only current and pas values
             query : Query. In transformer paper it is the input for both encoder and decoder
             key : Keys. In transformer paper it is the input for both encoder and decoder
-            Values. In transformer paper it is the input for encoder and  encoded output for decoder (in masked attention part)
+            values: In transformer paper,
+                    it is the input for encoder and encoded output for decoder (in masked attention part)
         Output:
             query: Input gets changed over the layer and returned.
         """

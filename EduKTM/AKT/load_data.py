@@ -63,7 +63,7 @@ class DATA(object):
                     qa_data.append(answer_sequence)
                     idx_data.append(student_id)
         f_data.close()
-        ### data: [[],[],[],...] <-- set_max_seqlen is used
+        # data: [[],[],[],...] <-- set_max_seqlen is used
         # convert data into ndarrays for better speed during training
         q_dataArray = np.zeros((len(q_data), self.seqlen))
         for j in range(len(q_data)):
@@ -97,9 +97,6 @@ class PID_DATA(object):
         p_data = []
         for lineID, line in enumerate(f_data):
             line = line.strip()
-            # lineID starts from 0
-            if lineID % 4 == 0:
-                student_id = lineID // 4
             if lineID % 4 == 2:
                 Q = line.split(self.separate_char)
                 if len(Q[len(Q) - 1]) == 0:
@@ -145,7 +142,7 @@ class PID_DATA(object):
                     p_data.append(problem_sequence)
 
         f_data.close()
-        ### data: [[],[],[],...] <-- set_max_seqlen is used
+        # data: [[],[],[],...] <-- set_max_seqlen is used
         # convert data into ndarrays for better speed during training
         q_dataArray = np.zeros((len(q_data), self.seqlen))
         for j in range(len(q_data)):

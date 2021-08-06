@@ -35,8 +35,8 @@ def compute_accuracy(all_target, all_pred):
 
 def train_one_epoch(net, params, optimizer, q_data, qa_data, pid_data):
     net.train()
-    pid_flag, batch_size, n_question, maxgradnorm = params['is_pid'], params['batch_size'], params['n_question'], \
-                                                    params['maxgradnorm']
+    pid_flag, batch_size, n_question, maxgradnorm = (
+        params['is_pid'], params['batch_size'], params['n_question'], params['maxgradnorm'])
     n = int(math.ceil(len(q_data) / batch_size))
     q_data = q_data.T
     qa_data = qa_data.T
@@ -57,8 +57,8 @@ def train_one_epoch(net, params, optimizer, q_data, qa_data, pid_data):
     for idx in range(n):
         optimizer.zero_grad()
 
-        q_one_seq = q_data[:, idx * batch_size: (idx+1) * batch_size]
-        qa_one_seq = qa_data[:, idx * batch_size: (idx+1) * batch_size]
+        q_one_seq = q_data[:, idx * batch_size: (idx + 1) * batch_size]
+        qa_one_seq = qa_data[:, idx * batch_size: (idx + 1) * batch_size]
 
         input_q = np.transpose(q_one_seq[:, :])
         input_qa = np.transpose(qa_one_seq[:, :])
