@@ -10,7 +10,7 @@ class DATA(object):
         self.seqlen = seqlen
 
     # data format
-    # id, true_student_id
+    # length
     # 1,1,1,1,7,7,9,10,10,10,10,11,11,45,54
     # 0,1,1,1,1,1,0,0,1,1,1,1,1,0,0
 
@@ -85,7 +85,7 @@ class PID_DATA(object):
         self.n_question = n_question
 
     # data format
-    # id, true_student_id
+    # length
     # pid1, pid2, ...
     # 1,1,1,1,7,7,9,10,10,10,10,11,11,45,54
     # 0,1,1,1,1,1,0,0,1,1,1,1,1,0,0
