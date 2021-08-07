@@ -1,7 +1,7 @@
 # coding: utf-8
 # 2021/8/5 @ zengxiaonan
 
-from scripts.AKT import DATA, PID_DATA
+from load_data import DATA, PID_DATA
 import logging
 from EduKTM import AKT
 
