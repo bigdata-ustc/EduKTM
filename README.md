@@ -44,4 +44,4 @@ If this repository is helpful for you, please cite our work
 
 ## Reference
 
-[1] Liu Q, Shen S, Huang Z, et al. A Survey of Knowledge Tracing[J]. arXiv preprint arXiv:2105.15106, 2021.
+[1] [Liu Q, Shen S, Huang Z, et al. A Survey of Knowledge Tracing[J]. arXiv preprint arXiv:2105.15106, 2021.](https://arxiv.org/pdf/2105.15106.pdf)
