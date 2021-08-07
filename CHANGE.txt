@@ -1,3 +1,6 @@
+v0.0.6:
+   * add AKT
+
 v0.0.5:
    * add DKT+
    * add some util functions
