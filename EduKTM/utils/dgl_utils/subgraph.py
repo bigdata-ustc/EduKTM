@@ -6,11 +6,43 @@ import torch
 from dgl.utils import extract_node_subframes_for_block, extract_edge_subframes, set_new_frames
 
 
+def repr_block(block):
+    return block.srcdata[dgl.NID], block.dstdata[dgl.NID], block.edges()
+
+
 class OutBlockSampler(object):
+    """
+    Examples
+    --------
+    >>> sampler = OutBlockSampler(2)
+    >>> g = dgl.graph([])
+    >>> g.add_nodes(10)
+    >>> g.add_edges([1, 1, 1, 2, 3], [2, 4, 3, 4, 5])
+    >>> blocks = sampler.sample_blocks(g, [1])
+    >>> blocks
+    [Block(num_src_nodes=1, num_dst_nodes=4, num_edges=3), Block(num_src_nodes=2, num_dst_nodes=4, num_edges=2)]
+    >>> repr_block(blocks[0])
+    (tensor([1]), tensor([2, 3, 4]), (tensor([0, 0, 0]), tensor([1, 2, 3])))
+    >>> repr_block(blocks[1])
+    (tensor([2, 3]), tensor([4, 5]), (tensor([0, 1]), tensor([2, 3])))
+    """
+
     def __init__(self, num_layers):
         self.num_layers = num_layers
 
     def sample_blocks(self, g, seed_nodes, *args):
+        """
+
+        Parameters
+        ----------
+        g
+        seed_nodes: list
+        args
+
+        Returns
+        -------
+        blocks: list
+        """
         blocks = []
         for _ in range(self.num_layers):
             osg = dgl.subgraph.out_subgraph(g, seed_nodes)
@@ -27,22 +59,3 @@ class OutBlockSampler(object):
             seed_nodes = {ntype: block.dstnodes[ntype].data[NID] for ntype in block.dsttypes}
             blocks.append(block)
         return blocks
-
-
-# print(es)
-# b = dgl.create_block(es.edges())
-# print(b)
-# nsf = extract_node_subframes_for_block(g, [torch.unique(og.edges()[0])], [torch.unique(og.edges()[1])])
-# print(nsf)
-# esf = extract_edge_subframes(g, [es.edata[EID]])
-# print(esf)
-# set_new_frames(b, node_frames=nsf, edge_frames=esf)
-# print(b)
-# print(b.srcdata)
-# print(b.dstdata)
-# sg = g.out_subgraph([4])
-# print(sg)
-#
-# print_block(dgl.create_block(sg.edges()))
-
-
