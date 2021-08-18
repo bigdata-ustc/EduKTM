@@ -8,7 +8,7 @@ test_deps = [
 
 setup(
     name='EduKTM',
-    version='0.0.6',
+    version='0.0.7',
     extras_require={
         'test': test_deps,
     },
