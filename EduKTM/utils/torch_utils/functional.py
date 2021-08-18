@@ -1,12 +1,71 @@
 # coding: utf-8
 # 2021/5/24 @ tongshiwei
-__all__ = ["pick", "tensor2list", "length2mask", "get_sequence_mask", "sequence_mask"]
+__all__ = ["batch_pick", "pick", "tensor2list", "length2mask", "get_sequence_mask", "sequence_mask"]
 
 import torch
 from torch import Tensor
 
 
+def batch_pick(tensor, batch_index, keep_dim=False):
+    """
+
+    Parameters
+    ----------
+    tensor:
+        (B, N, C)
+    batch_index
+        (B, )
+    keep_dim
+
+    Returns
+    -------
+
+
+    Examples
+    --------
+    >>> tensor = torch.tensor([[[0, 1, 2], [1, 11, 12]], [[2, 21, 22], [3, 31, 32]]])
+    >>> index = torch.tensor([0, 1])
+    >>> batch_pick(tensor, index)
+    tensor([[ 0,  1,  2],
+            [ 3, 31, 32]])
+    >>> batch_pick(tensor, index, keep_dim=True)
+    tensor([[[ 0,  1,  2]],
+    <BLANKLINE>
+            [[ 3, 31, 32]]])
+    """
+    batch_index = batch_index.reshape(batch_index.shape[0], 1, 1)
+    batch_index = batch_index.repeat(1, 1, tensor.shape[-1])
+    tensor = torch.gather(tensor, 1, batch_index)
+    if keep_dim is False:
+        return tensor.squeeze(1)
+    return tensor
+
+
 def pick(tensor, index, axis=-1):
+    """
+
+    Parameters
+    ----------
+    tensor
+    index
+    axis
+
+    Returns
+    -------
+
+    Examples
+    --------
+    >>> import torch
+    >>> tensor = torch.tensor([[[0, 1], [10, 11], [20, 21]], [[30, 31], [40, 41], [50, 51]]])
+    >>> tensor
+    tensor([[[ 0,  1],
+             [10, 11],
+             [20, 21]],
+    <BLANKLINE>
+            [[30, 31],
+             [40, 41],
+             [50, 51]]])
+    """
     return torch.gather(tensor, axis, index.unsqueeze(axis)).squeeze(axis)
 
 

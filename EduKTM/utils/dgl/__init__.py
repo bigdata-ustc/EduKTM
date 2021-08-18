@@ -3,4 +3,3 @@
 
 from .subgraph import OutBlockSampler, MFGLoader, ParallelMFGLoader
 from .const import *
-from .utils import *
