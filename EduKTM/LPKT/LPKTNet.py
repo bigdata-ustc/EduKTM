@@ -65,17 +65,20 @@ class LPKTNet(nn.Module):
             # h_pre: (bs, n_skill, d_k)
             # LG: (bs, d_k)
             # it: (bs, d_k)
+            # W_4: (3 * d_k, d_k)
             n_skill = LG_tilde.size(1)
-            gamma_f = torch.zeros(batch_size, n_skill, self.d_k)
-            for j in range(n_skill):
-                gamma_f[:, j, :] = self.linear_4(torch.cat((h_pre[:, j, :], LG, it), 1))
-                gamma_f[:, j, :] = self.sig(gamma_f[:, j, :])
+            gamma_f = self.sig(self.linear_4(torch.cat((
+                h_pre,
+                LG.repeat(1, n_skill).view(batch_size, -1, self.d_k),
+                it.repeat(1, n_skill).view(batch_size, -1, self.d_k)
+            ), 2)))
             h = LG_tilde + gamma_f * h_pre
 
             # Predicting Module
             h_tilde = self.q_matrix[e_data[:, t + 1]].view(batch_size, 1, -1).bmm(h).view(batch_size, self.d_k)
             y = self.linear_5(torch.cat((e_embed, h_tilde), 1)).sum(1) / self.d_k
-            y = self.sig(self.dropout(y))
+            # y = self.sig(self.dropout(y))
+            y = self.sig(y)
             pred[:, t + 1] = y
 
             # prepare for next prediction
