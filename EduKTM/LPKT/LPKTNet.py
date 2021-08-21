@@ -37,7 +37,7 @@ class LPKTNet(nn.Module):
         a_data = a_data.view(-1, 1).repeat(1, self.d_a).view(batch_size, -1, self.d_a)
         h_pre = torch.zeros(batch_size, self.n_question + 1, self.d_k)
         h_tilde_pre = None
-        l_pre = torch.zeros(batch_size, self.d_k)
+        learning_pre = torch.zeros(batch_size, self.d_k)
 
         pred = torch.zeros(batch_size, seq_len)
 
@@ -53,10 +53,10 @@ class LPKTNet(nn.Module):
             # Learning Module
             if h_tilde_pre is None:
                 h_tilde_pre = q_e.bmm(h_pre).view(batch_size, self.d_k)
-            l = self.linear_1(torch.cat((e_embed, at, a), 1))
-            learning_gain = self.linear_2(torch.cat((l_pre, it, l, h_tilde_pre), 1))
+            learning = self.linear_1(torch.cat((e_embed, at, a), 1))
+            learning_gain = self.linear_2(torch.cat((learning_pre, it, learning, h_tilde_pre), 1))
             learning_gain = self.tanh(learning_gain)
-            gamma_l = self.linear_3(torch.cat((l_pre, it, l, h_tilde_pre), 1))
+            gamma_l = self.linear_3(torch.cat((learning_pre, it, learning, h_tilde_pre), 1))
             gamma_l = self.sig(gamma_l)
             LG = gamma_l * ((learning_gain + 1) / 2)
             LG_tilde = LG.view(batch_size, self.d_k, 1).bmm(q_e).transpose(1, 2)
@@ -82,7 +82,7 @@ class LPKTNet(nn.Module):
             pred[:, t + 1] = y
 
             # prepare for next prediction
-            l_pre = l
+            learning_pre = learning
             h_pre = h
             h_tilde_pre = h_tilde
 

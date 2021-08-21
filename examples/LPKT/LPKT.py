@@ -3,7 +3,7 @@ import numpy as np
 from load_data import DATA
 from EduKTM import LPKT
 
-def generate_q_matrix(path, n_skill, n_problem, gamma=0):
+def generate_q_matrix(path, n_skill, n_problem, gamma=0.0):
     with open(path, 'r', encoding='utf-8') as f:
         for line in f:
             problem2skill = eval(line)
