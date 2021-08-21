@@ -4,8 +4,6 @@
 import torch
 from torch import nn
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 class LPKTNet(nn.Module):
     def __init__(self, n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, dropout=0.2):

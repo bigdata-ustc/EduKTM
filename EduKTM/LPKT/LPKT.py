@@ -30,7 +30,7 @@ def compute_accuracy(all_target, all_pred):
     return metrics.accuracy_score(all_target, all_pred)
 
 
-def train_one_epoch(net, optimizer, criterion, batch_size, a_data, e_data, it_data, at_data, reg_lambda=0.000001):
+def train_one_epoch(net, optimizer, criterion, batch_size, a_data, e_data, it_data, at_data):
     net.train()
     n = int(math.ceil(len(e_data) / batch_size))
     shuffled_ind = np.arange(e_data.shape[0])
