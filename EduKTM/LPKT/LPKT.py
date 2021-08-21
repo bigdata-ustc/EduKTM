@@ -131,14 +131,14 @@ class LPKT(KTM):
         criterion = nn.BCELoss(reduction='none')
 
         for idx in range(epoch):
-            train_loss, train_accuracy, train_acc = train_one_epoch(self.lpkt_net, optimizer, criterion,
+            train_loss, valid_auc, valid_accuracy = train_one_epoch(self.lpkt_net, optimizer, criterion,
                                                                     self.batch_size, *train_data)
             print("[Epoch %d] LogisticLoss: %.6f" % (idx, train_loss))
 
             if test_data is not None:
                 pass
-                valid_loss, valid_accuracy, valid_acc = self.eval(test_data)
-                print("[Epoch %d] auc: %.6f, accuracy: %.6f" % (idx, valid_acc, valid_accuracy))
+                valid_loss, valid_auc, valid_accuracy = self.eval(test_data)
+                print("[Epoch %d] auc: %.6f, accuracy: %.6f" % (idx, valid_auc, valid_accuracy))
 
     def eval(self, test_data) -> ...:
         self.lpkt_net.eval()
