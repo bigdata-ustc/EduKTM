@@ -12,6 +12,8 @@ import tqdm
 from EduKTM import KTM
 from .LPKTNet import LPKTNet
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 def binary_entropy(target, pred):
     loss = target * np.log(np.maximum(1e-10, pred)) + (1.0 - target) * np.log(np.maximum(1e-10, 1.0 - pred))
@@ -28,7 +30,7 @@ def compute_accuracy(all_target, all_pred):
     return metrics.accuracy_score(all_target, all_pred)
 
 
-def train_one_epoch(net, optimizer, criterion, batch_size, a_data, e_data, it_data, at_data):
+def train_one_epoch(net, optimizer, criterion, batch_size, a_data, e_data, it_data, at_data, reg_lambda=0.000001):
     net.train()
     n = int(math.ceil(len(e_data) / batch_size))
     shuffled_ind = np.arange(e_data.shape[0])
@@ -49,10 +51,10 @@ def train_one_epoch(net, optimizer, criterion, batch_size, a_data, e_data, it_da
         a_one_seq = a_data[idx * batch_size: (idx + 1) * batch_size, :]
         it_one_seq = it_data[idx * batch_size: (idx + 1) * batch_size, :]
 
-        input_e = torch.from_numpy(e_one_seq).long()
-        input_at = torch.from_numpy(at_one_seq).long()
-        input_it = torch.from_numpy(it_one_seq).long()
-        target = torch.from_numpy(a_one_seq).float()
+        input_e = torch.from_numpy(e_one_seq).long().to(device)
+        input_at = torch.from_numpy(at_one_seq).long().to(device)
+        input_it = torch.from_numpy(it_one_seq).long().to(device)
+        target = torch.from_numpy(a_one_seq).float().to(device)
 
         pred = net(input_e, input_at, target, input_it)
 
@@ -94,10 +96,10 @@ def test_one_epoch(net, batch_size, a_data, e_data, it_data, at_data):
         a_one_seq = a_data[idx * batch_size: (idx + 1) * batch_size, :]
         it_one_seq = it_data[idx * batch_size: (idx + 1) * batch_size, :]
 
-        input_e = torch.from_numpy(e_one_seq).long()
-        input_at = torch.from_numpy(at_one_seq).long()
-        input_it = torch.from_numpy(it_one_seq).long()
-        target = torch.from_numpy(a_one_seq).float()
+        input_e = torch.from_numpy(e_one_seq).long().to(device)
+        input_at = torch.from_numpy(at_one_seq).long().to(device)
+        input_it = torch.from_numpy(it_one_seq).long().to(device)
+        target = torch.from_numpy(a_one_seq).float().to(device)
 
         with torch.no_grad():
             pred = net(input_e, input_at, target, input_it)
@@ -123,11 +125,11 @@ class LPKT(KTM):
     def __init__(self, n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, batch_size, dropout=0.2):
         super(LPKT, self).__init__()
         q_matrix = torch.from_numpy(q_matrix).float()
-        self.lpkt_net = LPKTNet(n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, dropout)
+        self.lpkt_net = LPKTNet(n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, dropout).to(device)
         self.batch_size = batch_size
 
     def train(self, train_data, test_data=None, *, epoch: int, lr=0.002) -> ...:
-        optimizer = torch.optim.Adam(self.lpkt_net.parameters(), lr=lr, betas=(0.0, 0.999), eps=1e-8)
+        optimizer = torch.optim.Adam(self.lpkt_net.parameters(), lr=lr, betas=(0.0, 0.999), eps=1e-8, weight_decay=1e-6)
         criterion = nn.BCELoss(reduction='none')
 
         for idx in range(epoch):

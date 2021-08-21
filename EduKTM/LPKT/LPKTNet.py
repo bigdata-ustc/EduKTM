@@ -4,6 +4,8 @@
 import torch
 from torch import nn
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class LPKTNet(nn.Module):
     def __init__(self, n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, dropout=0.2):
@@ -42,7 +44,6 @@ class LPKTNet(nn.Module):
         pred = torch.zeros(batch_size, seq_len)
 
         for t in range(0, seq_len - 1):
-            pass
             e = e_data[:, t]
             q_e = self.q_matrix[e].view(batch_size, 1, -1)
             e_embed = e_embed_data[:, t]
@@ -59,7 +60,7 @@ class LPKTNet(nn.Module):
             gamma_l = self.linear_3(torch.cat((learning_pre, it, learning, h_tilde_pre), 1))
             gamma_l = self.sig(gamma_l)
             LG = gamma_l * ((learning_gain + 1) / 2)
-            LG_tilde = LG.view(batch_size, self.d_k, 1).bmm(q_e).transpose(1, 2)
+            LG_tilde = self.dropout(LG.view(batch_size, self.d_k, 1).bmm(q_e).transpose(1, 2))
 
             # Forgetting Module
             # h_pre: (bs, n_skill, d_k)
@@ -77,7 +78,6 @@ class LPKTNet(nn.Module):
             # Predicting Module
             h_tilde = self.q_matrix[e_data[:, t + 1]].view(batch_size, 1, -1).bmm(h).view(batch_size, self.d_k)
             y = self.linear_5(torch.cat((e_embed, h_tilde), 1)).sum(1) / self.d_k
-            # y = self.sig(self.dropout(y))
             y = self.sig(y)
             pred[:, t + 1] = y
 
