@@ -4,4 +4,3 @@
 from .utils import *
 from .loss import SequenceLogisticMaskLoss as SLMLoss
 from .torch_utils import *
-from .dgl import *
