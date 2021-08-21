@@ -5,7 +5,7 @@ __all__ = ["SequenceLogisticMaskLoss", "LogisticMaskLoss"]
 import torch
 from torch import nn
 
-from .torch_utils import pick, sequence_mask
+from .torch import pick, sequence_mask
 
 
 class SequenceLogisticMaskLoss(nn.Module):

@@ -4,7 +4,7 @@
 import torch
 import json
 from tqdm import tqdm
-from EduKTM.utils.torch_utils import PadSequence, FixedBucketSampler
+from EduKTM.utils.torch import PadSequence, FixedBucketSampler
 
 
 def extract(data_src):  # pragma: no cover
