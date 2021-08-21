@@ -6,3 +6,4 @@ from .KPT import KPT
 from .DKT import DKT
 from .DKTPlus import DKTPlus
 from .AKT import AKT
+from .LPKT import LPKT

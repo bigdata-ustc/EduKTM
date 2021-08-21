@@ -22,6 +22,7 @@ Knowledge Tracing (KT), which aims to monitor students’ evolving knowledge sta
 * [DKT](EduKTM/DKT) [[doc]](docs/DKT.md) [[example]](examples/DKT)
 * [DKT+](EduKTM/DKTPlus) [[doc]](docs/DKT+.md) [[example]](examples/DKT+)
 * [AKT](EduKTM/AKT) [[doc]](docs/AKT.md) [[example]](examples/AKT)
+* [LPKT](EduKTM/LPKT) [[doc]](docs/LPKT.md) [[example]](examples/LPKT)
 
 ## Contribute
 
