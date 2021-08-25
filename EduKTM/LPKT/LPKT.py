@@ -124,21 +124,25 @@ def test_one_epoch(net, batch_size, a_data, e_data, it_data, at_data):
 class LPKT(KTM):
     def __init__(self, n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, batch_size, dropout=0.2):
         super(LPKT, self).__init__()
-        q_matrix = torch.from_numpy(q_matrix).float()
+        q_matrix = torch.from_numpy(q_matrix).float().to(device)
         self.lpkt_net = LPKTNet(n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, dropout).to(device)
         self.batch_size = batch_size
 
-    def train(self, train_data, test_data=None, *, epoch: int, lr=0.002) -> ...:
+    def train(self, train_data, test_data=None, *, epoch: int, lr=0.002, lr_decay_step=15, lr_decay_rate=0.3) -> ...:
         optimizer = torch.optim.Adam(self.lpkt_net.parameters(), lr=lr, betas=(0.0, 0.999), eps=1e-8, weight_decay=1e-6)
+        scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer,
+                                                      lr_lambda=lambda e: 1 / (1 + lr_decay_rate * e),
+                                                      last_epoch=-1)
         criterion = nn.BCELoss(reduction='none')
 
         for idx in range(epoch):
             train_loss, valid_auc, valid_accuracy = train_one_epoch(self.lpkt_net, optimizer, criterion,
                                                                     self.batch_size, *train_data)
             print("[Epoch %d] LogisticLoss: %.6f" % (idx, train_loss))
+            if idx % lr_decay_step == lr_decay_step - 1:
+                scheduler.step()
 
             if test_data is not None:
-                pass
                 valid_loss, valid_auc, valid_accuracy = self.eval(test_data)
                 print("[Epoch %d] auc: %.6f, accuracy: %.6f" % (idx, valid_auc, valid_accuracy))
 

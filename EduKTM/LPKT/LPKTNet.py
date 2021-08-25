@@ -4,6 +4,8 @@
 import torch
 from torch import nn
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class LPKTNet(nn.Module):
     def __init__(self, n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, dropout=0.2):
@@ -35,11 +37,11 @@ class LPKTNet(nn.Module):
         at_embed_data = self.at_embed(at_data)
         it_embed_data = self.it_embed(it_data)
         a_data = a_data.view(-1, 1).repeat(1, self.d_a).view(batch_size, -1, self.d_a)
-        h_pre = torch.zeros(batch_size, self.n_question + 1, self.d_k)
+        h_pre = nn.init.xavier_uniform_(torch.zeros(self.n_question + 1, self.d_k)).repeat(batch_size, 1, 1).to(device)
         h_tilde_pre = None
-        learning_pre = torch.zeros(batch_size, self.d_k)
+        learning_pre = torch.zeros(batch_size, self.d_k).to(device)
 
-        pred = torch.zeros(batch_size, seq_len)
+        pred = torch.zeros(batch_size, seq_len).to(device)
 
         for t in range(0, seq_len - 1):
             e = e_data[:, t]

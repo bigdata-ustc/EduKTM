@@ -12,7 +12,7 @@ def generate_q_matrix(path, n_skill, n_problem, gamma=0.0):
         q_matrix[p][problem2skill[p]] = 1
     return q_matrix
 
-batch_size = 64
+batch_size = 32
 n_at = 9632
 n_it = 2890
 n_question = 102
@@ -21,7 +21,7 @@ seqlen = 500
 d_k = 128
 d_a = 50
 d_e = 128
-q_gamma = 0.3
+q_gamma = 0.03
 dropout = 0.2
 
 dat = DATA(seqlen=seqlen, separate_char=',')
@@ -36,7 +36,7 @@ q_matrix = generate_q_matrix(
 logging.getLogger().setLevel(logging.INFO)
 
 lpkt = LPKT(n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, batch_size, dropout)
-lpkt.train(train_data, test_data, epoch=2)
+lpkt.train(train_data, test_data, epoch=30, lr=0.003)
 lpkt.save("lpkt.params")
 
 lpkt.load("lpkt.params")
