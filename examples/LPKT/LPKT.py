@@ -13,8 +13,8 @@ def generate_q_matrix(path, n_skill, n_problem, gamma=0.0):
     return q_matrix
 
 batch_size = 32
-n_at = 9632
-n_it = 2890
+n_at = 1326
+n_it = 2839
 n_question = 102
 n_exercise = 3162
 seqlen = 500
