@@ -9,7 +9,7 @@ from collections import namedtuple
 from collections import defaultdict
 from EduKTM import KTM
 
-hyper_para = namedtuple("hyperparameters", ["r", "D", "deltaT", "S", "lambda_U_1", "lambda_U", "lambda_P", "lambda_V"])
+hyper_para = namedtuple("hyperparameters", ["r", "D", "deltaT", "S", "lambda_U_1", "lambda_U", "lambda_P", "lambda_S"])
 default_hyper = hyper_para(6, 2, 1, 5, 0.01, 2, 2, 0.01)
 
 
@@ -29,9 +29,9 @@ def stu_curve(u_latent, alpha, r, D, deltaT, S, time_freq):  # learning and forg
     return pred_u, freq_norm
 
 
-class KPT(KTM):
+class EKPT(KTM):
     """
-    KPT model, training (MAP) and testing methods
+    EKPT model, training (MAP) and testing methods
     Parameters
     ----------
     q_m: array
@@ -50,7 +50,7 @@ class KPT(KTM):
     """
 
     def __init__(self, q_m, stu_num, prob_num, know_num, time_window_num, args=default_hyper):
-        super(KPT, self).__init__()
+        super(EKPT, self).__init__()
         self.args = args
         self.q_m = q_m
         self.stu_num, self.prob_num, self.know_num = stu_num, prob_num, know_num
@@ -65,6 +65,9 @@ class KPT(KTM):
                 for o2 in range(know_num):
                     if self.q_m[i][o2] == 0:
                         self.par_mat[i][o1][o2] = 1
+
+        # exercise relation
+        self.exer_neigh = (np.dot(self.q_m, self.q_m.transpose()) > 0).astype(int)
 
     def train(self, train_data, epoch, lr=0.001, lr_b=0.0001, epsilon=1e-3, init_method='mean') -> ...:
         # train_data(list): response data, length = time_window_num, e.g.[[{'user_id':, 'item_id':, 'score':},...],...]
@@ -110,7 +113,9 @@ class KPT(KTM):
                     R_diff = pred_R[i] - rating
                     b_gradient[item] -= R_diff
                     u_gradient_t[user] += R_diff * i_latent[item]
-                    i_gradient[item] += R_diff * u_latent[t][user] + self.args.lambda_V * i_latent[item]
+                    i_gradient[item] += R_diff * u_latent[t][user] + self.args.lambda_S * i_latent[item]
+                    i_gradient[item] -= self.args.lambda_S * np.sum(
+                        np.expand_dims(self.exer_neigh[item], axis=1) * i_latent, axis=0) / sum(self.exer_neigh[item])
                     if t == 0:
                         u_gradient_t[user] += self.args.lambda_U_1 * u_latent[0][user]
                     else:
