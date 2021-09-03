@@ -1,7 +1,7 @@
-# Knowledge Proficiency Tracing model (KPT)
+#  Exercise-correlated Knowledge Proficiency Tracing model (EKPT)
 
 
-If the reader wants to know the details of KPT, please refer to the Chapter 4 of the paper: *[Learning or Forgetting? A Dynamic Approach for Tracking the Knowledge Proficiency of Students](http://staff.ustc.edu.cn/~huangzhy/files/papers/ZhenyaHuang-TOIS2020.pdf)*.
+If the reader wants to know the details of EKPT, please refer to the Chapter 5 of the paper: *[Learning or Forgetting? A Dynamic Approach for Tracking the Knowledge Proficiency of Students](http://staff.ustc.edu.cn/~huangzhy/files/papers/ZhenyaHuang-TOIS2020.pdf)*.
 ```bibtex
 @article{huang2020learning,
   title={Learning or forgetting? A dynamic approach for tracking the knowledge proficiency of students},
@@ -15,4 +15,4 @@ If the reader wants to know the details of KPT, please refer to the Chapter 4 of
 }
 ```
 
-![model](_static/KPT.png)
+![model](_static/EKPT.png)

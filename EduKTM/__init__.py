@@ -3,6 +3,7 @@
 
 from .meta import KTM
 from .KPT import KPT
+from .EKPT import EKPT
 from .DKT import DKT
 from .DKTPlus import DKTPlus
 from .AKT import AKT
