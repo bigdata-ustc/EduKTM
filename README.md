@@ -16,7 +16,7 @@ Knowledge Tracing (KT), which aims to monitor students’ evolving knowledge sta
 
 ## Brief introduction to KTM
 
-## List of modelss
+## List of models
 
 * [KPT](EduKTM/KPT) [[doc]](docs/KPT.md) [[example]](examples/KPT)
 * [EKPT](EduKTM/EKPT) [[doc]](docs/EKPT.md) [[example]](examples/EKPT)
