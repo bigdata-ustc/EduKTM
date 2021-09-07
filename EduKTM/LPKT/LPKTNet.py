@@ -48,14 +48,11 @@ class LPKTNet(nn.Module):
             e = e_data[:, t]
             # q_e: (bs, 1, n_skill)
             q_e = self.q_matrix[e].view(batch_size, 1, -1)
-            e_embed = e_embed_data[:, t]
-            at = at_embed_data[:, t]
-            a = a_data[:, t]
             it = it_embed_data[:, t]
 
             # Learning Module
             if h_tilde_pre is None:
-                h_tilde_pre = q_e.bmm(h_pre).view(batch_size, self.d_k)# learning = self.linear_1(torch.cat((e_embed, at, a), 1))
+                h_tilde_pre = q_e.bmm(h_pre).view(batch_size, self.d_k)
             learning = all_learning[:, t]
             learning_gain = self.linear_2(torch.cat((learning_pre, it, learning, h_tilde_pre), 1))
             learning_gain = self.tanh(learning_gain)
@@ -78,8 +75,7 @@ class LPKTNet(nn.Module):
 
             # Predicting Module
             h_tilde = self.q_matrix[e_data[:, t + 1]].view(batch_size, 1, -1).bmm(h).view(batch_size, self.d_k)
-            y = self.linear_5(torch.cat((e_embed_data[:, t + 1], h_tilde), 1)).sum(1) / self.d_k
-            y = self.sig(y)
+            y = self.sig(self.linear_5(torch.cat((e_embed_data[:, t + 1], h_tilde), 1))).sum(1) / self.d_k
             pred[:, t + 1] = y
 
             # prepare for next prediction
