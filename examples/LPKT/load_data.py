@@ -57,8 +57,8 @@ class DATA(object):
                         end_index = total_len
                     else:
                         end_index = (k + 1) * self.seqlen
-                    # choose the sequence length is larger than 5
-                    if end_index - k * self.seqlen > 5:
+                    # choose the sequence length is larger than 2
+                    if end_index - k * self.seqlen > 2:
                         for i in range(k * self.seqlen, end_index):
                             answer_sequence.append(int(A[i]))
                             exercise_sequence.append(int(E[i]))
