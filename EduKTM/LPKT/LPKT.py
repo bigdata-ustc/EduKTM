@@ -124,23 +124,32 @@ def test_one_epoch(net, batch_size, a_data, e_data, it_data, at_data):
 class LPKT(KTM):
     def __init__(self, n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, batch_size, dropout=0.2):
         super(LPKT, self).__init__()
-        q_matrix = torch.from_numpy(q_matrix).float()
+        q_matrix = torch.from_numpy(q_matrix).float().to(device)
         self.lpkt_net = LPKTNet(n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, dropout).to(device)
         self.batch_size = batch_size
 
-    def train(self, train_data, test_data=None, *, epoch: int, lr=0.002) -> ...:
-        optimizer = torch.optim.Adam(self.lpkt_net.parameters(), lr=lr, betas=(0.0, 0.999), eps=1e-8, weight_decay=1e-6)
+    def train(self, train_data, test_data=None, *, epoch: int, lr=0.002, lr_decay_step=15, lr_decay_rate=0.5) -> ...:
+        optimizer = torch.optim.Adam(self.lpkt_net.parameters(), lr=lr, eps=1e-8, betas=(0.1, 0.999), weight_decay=1e-6)
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, lr_decay_step, gamma=lr_decay_rate)
         criterion = nn.BCELoss(reduction='none')
+        best_train_auc, best_test_auc = .0, .0
 
         for idx in range(epoch):
-            train_loss, valid_auc, valid_accuracy = train_one_epoch(self.lpkt_net, optimizer, criterion,
+            train_loss, train_auc, train_accuracy = train_one_epoch(self.lpkt_net, optimizer, criterion,
                                                                     self.batch_size, *train_data)
             print("[Epoch %d] LogisticLoss: %.6f" % (idx, train_loss))
+            if train_auc > best_train_auc:
+                best_train_auc = train_auc
+
+            scheduler.step()
 
             if test_data is not None:
-                pass
-                valid_loss, valid_auc, valid_accuracy = self.eval(test_data)
-                print("[Epoch %d] auc: %.6f, accuracy: %.6f" % (idx, valid_auc, valid_accuracy))
+                test_loss, test_auc, test_accuracy = self.eval(test_data)
+                print("[Epoch %d] auc: %.6f, accuracy: %.6f" % (idx, test_auc, test_accuracy))
+                if test_auc > best_test_auc:
+                    best_test_auc = test_auc
+
+        return best_train_auc, best_test_auc
 
     def eval(self, test_data) -> ...:
         self.lpkt_net.eval()
