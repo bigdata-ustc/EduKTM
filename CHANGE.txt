@@ -1,3 +1,7 @@
+v0.0.8:
+   * add EKPT
+   * fix bugs in LPKT
+
 v0.0.7:
    * rename EduKTM.utils.torch_utils to EduKTM.utils.torch
    * add LPKT
