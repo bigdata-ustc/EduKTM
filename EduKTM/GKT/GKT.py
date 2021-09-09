@@ -20,6 +20,7 @@ class GKT(KTM):
 
         trainer = torch.optim.Adam(self.net.parameters(), lr)
 
+        self.net = self.net.to(device)
         for e in range(epoch):
             losses = []
             for (item_id, response, data_mask, label, next_item_id, label_mask) in tqdm(train_data, "Epoch %s" % e):

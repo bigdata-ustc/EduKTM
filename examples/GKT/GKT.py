@@ -16,7 +16,7 @@ if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
 
     gkt = GKT(graph, item_dim=5, state_dim=5)
-    gkt.train(train, epoch=2)
+    gkt.train(train, epoch=2, device="cuda:0")
 # gkt.save("gkt.params")
 
 # gkt.load("gkt.params")

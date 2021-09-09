@@ -4,7 +4,7 @@
 import torch
 from torch import nn
 import dgl
-from EduKTM.utils.dgl import ParallelMFGLoader as MFGLoader, FID
+from EduKTM.utils.dgl import MFGLoader as MFGLoader, FID
 from EduKTM.SKT.utils import EAG
 import dgl.function as fn
 import itertools as it
@@ -108,16 +108,18 @@ class GKTNet(nn.Module):
         self.fc = nn.Linear(state_dim, 1)
         self.sig = nn.Sigmoid()
 
-    def get_states(self, batch_size):
-        h0 = torch.zeros(batch_size, self.item_size, self.state_dim)
+    def get_states(self, batch_size, device="cpu"):
+        h0 = torch.zeros(batch_size, self.item_size, self.state_dim, device=device)
         return h0
 
-    def get_memory(self, batch_size):
-        m0 = torch.zeros(batch_size, self.item_size, self.feature_num)
+    def get_memory(self, batch_size, device="cpu"):
+        m0 = torch.zeros(batch_size, self.item_size, self.feature_num, device=device)
         return m0
 
-    def get_item_embedding_weight(self, batch_size):
-        return torch.unsqueeze(self.item_embedding(torch.arange(self.item_size)), 0).repeat(batch_size, 1, 1)
+    def get_item_embedding_weight(self, batch_size, device="cpu"):
+        return torch.unsqueeze(
+            self.item_embedding(torch.arange(self.item_size, device=device)), 0
+        ).repeat(batch_size, 1, 1)
 
     def forward(self, item_ids, responses, mask=None, next_item_ids=None):
         """
@@ -140,9 +142,11 @@ class GKTNet(nn.Module):
         -------
 
         """
+        device = item_ids.device
+        self.graph = self.graph.to(device)
         batch_size = item_ids.shape[0]
-        h = self.get_states(batch_size)  # (batch, N, state_dim)
-        m = self.get_memory(batch_size)  # (batch, N, state_dim)
+        h = self.get_states(batch_size, device)  # (batch, N, state_dim)
+        m = self.get_memory(batch_size, device)  # (batch, N, state_dim)
         item_ids = torch.transpose(item_ids, 0, 1)  # (seq, batch, item_id)
         items = self.item_embedding(item_ids)  # (seq, batch, item_dim)
         responses = self.response_embedding(torch.transpose(responses, 0, 1))  # (seq, batch, item_dim)
@@ -160,7 +164,7 @@ class GKTNet(nn.Module):
                 zip(item_ids, items, responses, next_item_ids)
         ):  # iterate on time
             # (batch, id) for item_id, next_item_id, (batch, item_dim) for item and response
-            ie = self.get_item_embedding_weight(batch_size)  # (batch, N, item_dim)
+            ie = self.get_item_embedding_weight(batch_size, device)  # (batch, N, item_dim)
             h_ = torch.cat([h, self.eag(ie, response, item_id, single=True)], dim=-1)
             m_tilde = []
             _mask = None if mask is None else t <= mask

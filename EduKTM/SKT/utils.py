@@ -116,6 +116,6 @@ class EAG(nn.Module):
         indices = torch.unsqueeze(indices, 1) if single else indices
         tar = torch.unsqueeze(tar, 1) if single else tar
         for _src, _tar, index in zip(src, tar, indices):
-            erase = (1 - indices2mask(index, _src.shape)) * _src
+            erase = (1 - indices2mask(index, _src.shape)).to(_src.device) * _src
             tensor.append(torch.index_add(erase, 0, index, _tar))
         return torch.stack(tensor)

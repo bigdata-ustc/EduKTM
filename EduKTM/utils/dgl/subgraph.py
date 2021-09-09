@@ -8,6 +8,7 @@ from .const import FID
 from queue import Queue
 import threading as mp
 import itertools as it
+from torch.multiprocessing import Queue as TQueue, Process
 
 
 def repr_block(block):
@@ -132,6 +133,35 @@ class ParallelMFGLoader(object):
 
         self.out_queue = Queue(4)
         self.process = mp.Thread(
+            target=sample_blocks,
+            args=(self.sampler, self.graph, ids, features, mask, self.out_queue),
+            daemon=True
+        )
+        self.process.start()
+        e = self.out_queue.get(block=True)
+        while not isinstance(e, StopIteration):
+            yield e
+            e = self.out_queue.get(block=True)
+        self.process.join()
+        self.process = None
+
+
+class TorchParallelMFGLoader(object):
+    def __init__(self, graph: dgl.DGLGraph, hop: int):
+        self.graph = graph
+        self.hop = hop
+        self.sampler = OutBlockSampler(self.hop)
+        self.process = None
+        self.out_queue = None
+
+    def __call__(self, ids, features, mask=None):
+        mask = it.cycle([None]) if mask is None else mask
+        if self.process is not None:
+            self.process.join()
+            self.process = None
+
+        self.out_queue = TQueue(4)
+        self.process = Process(
             target=sample_blocks,
             args=(self.sampler, self.graph, ids, features, mask, self.out_queue),
             daemon=True
