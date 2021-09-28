@@ -1,3 +1,6 @@
+v0.0.9:
+   * fix bugs in DKT
+
 v0.0.8:
    * add EKPT
    * fix bugs in LPKT
