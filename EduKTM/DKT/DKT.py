@@ -44,7 +44,7 @@ class DKT(KTM):
         self.dkt_model = Net(num_questions, hidden_size, num_layers)
 
     def train(self, train_data, test_data=None, *, epoch: int, lr=0.002) -> ...:
-        loss_function = nn.BCEWithLogitsLoss()
+        loss_function = nn.BCELoss()
         optimizer = torch.optim.Adam(self.dkt_model.parameters(), lr)
 
         for e in range(epoch):
