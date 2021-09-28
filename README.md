@@ -4,7 +4,7 @@
 
 # EduKTM
 [![PyPI](https://img.shields.io/pypi/v/EduKTM.svg)](https://pypi.python.org/pypi/EduKTM)
-[![test](https://github.com/bigdata-ustc/EduKTM/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/bigdata-ustc/EduKTM/actions/workflows/python-package.yml)
+[![test](https://github.com/bigdata-ustc/EduKTM/actions/workflows/python-test.yml/badge.svg?branch=main)](https://github.com/bigdata-ustc/EduKTM/actions/workflows/python-test.yml)
 [![codecov](https://codecov.io/gh/bigdata-ustc/EduKTM/branch/main/graph/badge.svg?token=B7gscOGQLD)](https://codecov.io/gh/bigdata-ustc/EduKTM)
 [![Download](https://img.shields.io/pypi/dm/EduKTM.svg?style=flat)](https://pypi.python.org/pypi/EduKTM)
 [![License](https://img.shields.io/github/license/bigdata-ustc/EduKTM)](LICENSE)
