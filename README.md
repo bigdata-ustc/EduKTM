@@ -12,9 +12,8 @@
 
 The Model Zoo of Knowledge Tracing  Models.
 
-Knowledge Tracing (KT), which aims to monitor students’ evolving knowledge state, is a fundamental and crucial task to support these intelligent services. Therefore, an increasing amount of research attention has been paid to this emerging area and considerable progress has been made[1]. However, the code of these works may use different program languages (e.g., python, lua) and different deep learning frameworks (e.g., tensorflow, torch and mxnet). Furthermore, some works did not well organize the codes systemly (e.g., the missing of running environments and dependencies), which brings difficulties in reproducing the models. To this end, we put forward the Model Zoo of Knowledge Tracing Models, named EduKTM, which collects most of concurrent popular works.
-
 ## Brief introduction to KTM
+Knowledge Tracing (KT), which aims to monitor students’ evolving knowledge state, is a fundamental and crucial task to support these intelligent services. Therefore, an increasing amount of research attention has been paid to this emerging area and considerable progress has been made[1]. However, the code of these works may use different program languages (e.g., python, lua) and different deep learning frameworks (e.g., tensorflow, torch and mxnet). Furthermore, some works did not well organize the codes systemly (e.g., the missing of running environments and dependencies), which brings difficulties in reproducing the models. To this end, we put forward the Model Zoo of Knowledge Tracing Models, named EduKTM, which collects most of concurrent popular works.
 
 ## List of models
 
