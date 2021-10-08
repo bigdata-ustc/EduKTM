@@ -16,16 +16,23 @@ class LPKTNet(nn.Module):
         self.q_matrix = q_matrix
         self.n_question = n_question
 
-        self.at_embed = nn.Embedding(n_at + 1, d_k)
-        self.it_embed = nn.Embedding(n_it + 1, d_k)
-        self.e_embed = nn.Embedding(n_exercise + 1, d_e)
-        self.h_embed = nn.Embedding(n_question + 1, d_k)
+        self.at_embed = nn.Embedding(n_at + 10, d_k)
+        torch.nn.init.xavier_uniform_(self.at_embed.weight)
+        self.it_embed = nn.Embedding(n_it + 10, d_k)
+        torch.nn.init.xavier_uniform_(self.it_embed.weight)
+        self.e_embed = nn.Embedding(n_exercise + 10, d_k)
+        torch.nn.init.xavier_uniform_(self.e_embed.weight)
 
         self.linear_1 = nn.Linear(d_a + d_e + d_k, d_k)
+        torch.nn.init.xavier_uniform_(self.linear_1.weight)
         self.linear_2 = nn.Linear(4 * d_k, d_k)
+        torch.nn.init.xavier_uniform_(self.linear_2.weight)
         self.linear_3 = nn.Linear(4 * d_k, d_k)
+        torch.nn.init.xavier_uniform_(self.linear_3.weight)
         self.linear_4 = nn.Linear(3 * d_k, d_k)
+        torch.nn.init.xavier_uniform_(self.linear_4.weight)
         self.linear_5 = nn.Linear(d_e + d_k, d_k)
+        torch.nn.init.xavier_uniform_(self.linear_5.weight)
 
         self.tanh = nn.Tanh()
         self.sig = nn.Sigmoid()
