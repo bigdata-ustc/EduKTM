@@ -125,7 +125,7 @@ class LPKT(KTM):
     def __init__(self, n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, batch_size, dropout=0.2):
         super(LPKT, self).__init__()
         q_matrix = torch.from_numpy(q_matrix).float().to(device)
-        self.lpkt_net = LPKTNet(n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, dropout).to(device)
+        self.lpkt_net = LPKTNet(n_at, n_it, n_exercise, n_question, d_a, d_e, d_k, q_matrix, dropout, device=device).to(device)
         self.batch_size = batch_size
 
     def train(self, train_data, test_data=None, *, epoch: int, lr=0.002, lr_decay_step=15, lr_decay_rate=0.5) -> ...:
