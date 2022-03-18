@@ -1,6 +1,7 @@
 # coding: utf-8
 # 2022/3/18 @ ouyangjie
 
+
 import logging
 import torch
 import torch.nn as nn
@@ -36,7 +37,7 @@ class Cell(nn.Module):
         correlation_weight = F.softmax(similarity_score, dim=1) # Shape: (batch_size, memory_size)
         return correlation_weight
 
-    def read(self, memory, control_input=None, read_weight=None):
+    def read(self, memory, read_weight):
         """
         Parameters
             control_input:  Shape (batch_size, control_state_dim)
@@ -45,8 +46,6 @@ class Cell(nn.Module):
         Returns
             read_content:   Shape (batch_size,  memory_state_dim)
         """
-        if read_weight is None:
-            read_weight = self.addressing(control_input=control_input, memory=memory)
         read_weight = read_weight.view(-1, 1)
         memory = memory.view(-1, self.memory_state_dim)
         rc = torch.mul(read_weight, memory)
@@ -64,7 +63,7 @@ class WriteCell(Cell):
         nn.init.constant_(self.erase.bias, 0)
         nn.init.constant_(self.add.bias, 0)
 
-    def write(self, control_input, memory, write_weight=None):
+    def write(self, control_input, memory, write_weight):
         """
         Parameters
             control_input:      Shape (batch_size, control_state_dim)
@@ -73,8 +72,6 @@ class WriteCell(Cell):
         Returns
             new_memory:         Shape (batch_size, memory_size, memory_state_dim)
         """
-        if write_weight is None:
-            write_weight = self.addressing(control_input=control_input, memory=memory)
         erase_signal = torch.sigmoid(self.erase(control_input))
         add_signal = torch.tanh(self.add(control_input))
         erase_reshape = erase_signal.view(-1, 1, self.memory_state_dim)
@@ -89,10 +86,11 @@ class DKVMNCell(nn.Module):
     def __init__(self, memory_size, key_memory_state_dim, value_memory_state_dim, init_key_memory):
         super(DKVMNCell, self).__init__()
         """
-        :param memory_size:             scalar
-        :param key_memory_state_dim:    scalar
-        :param value_memory_state_dim:  scalar
-        :param init_key_memory:         Shape (memory_size, value_memory_state_dim)
+        Parameters
+            memory_size:             int
+            key_memory_state_dim:    int
+            value_memory_state_dim:  int
+            init_key_memory:         Shape (memory_size, value_memory_state_dim)
         """
         self.memory_size = memory_size
         self.key_memory_state_dim = key_memory_state_dim
@@ -348,3 +346,4 @@ class DKVMN(KTM):
     def load(self, filepath):
         self.model.load_state_dict(torch.load(filepath))
         logging.info("load parameters from %s" % filepath)
+        
