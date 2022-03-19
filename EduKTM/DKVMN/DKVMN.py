@@ -10,15 +10,16 @@ import numpy as np
 import math
 from sklearn import metrics
 from tqdm import tqdm
-
 from EduKTM import KTM
+
 
 def varible(tensor, gpu):
     if gpu >= 0:
         return torch.autograd.Variable(tensor).cuda()
     else:
         return torch.autograd.Variable(tensor)
-    
+
+
 class Cell(nn.Module):
     def __init__(self, memory_size, memory_state_dim):
         super(Cell, self).__init__()
@@ -34,7 +35,7 @@ class Cell(nn.Module):
             correlation_weight:     Shape (batch_size, memory_size)
         """
         similarity_score = torch.matmul(control_input, torch.t(memory))
-        correlation_weight = F.softmax(similarity_score, dim=1) # Shape: (batch_size, memory_size)
+        correlation_weight = F.softmax(similarity_score, dim=1)  # Shape: (batch_size, memory_size)
         return correlation_weight
 
     def read(self, memory, read_weight):
@@ -52,6 +53,7 @@ class Cell(nn.Module):
         read_content = rc.view(-1, self.memory_size, self.memory_state_dim)
         read_content = torch.sum(read_content, dim=1)
         return read_content
+
 
 class WriteCell(Cell):
     def __init__(self, memory_size, memory_state_dim):
@@ -82,6 +84,7 @@ class WriteCell(Cell):
         new_memory = memory * (1 - erase_mult) + add_mul
         return new_memory
 
+
 class DKVMNCell(nn.Module):
     def __init__(self, memory_size, key_memory_state_dim, value_memory_state_dim, init_key_memory):
         super(DKVMNCell, self).__init__()
@@ -96,8 +99,8 @@ class DKVMNCell(nn.Module):
         self.key_memory_state_dim = key_memory_state_dim
         self.value_memory_state_dim = value_memory_state_dim
 
-        self.key_head = Cell(memory_size=self.memory_size,memory_state_dim=self.key_memory_state_dim)
-        self.value_head = WriteCell(memory_size=self.memory_size,memory_state_dim=self.value_memory_state_dim)
+        self.key_head = Cell(memory_size=self.memory_size, memory_state_dim=self.key_memory_state_dim)
+        self.value_head = WriteCell(memory_size=self.memory_size, memory_state_dim=self.value_memory_state_dim)
 
         self.key_memory = init_key_memory
         self.value_memory = None
@@ -121,6 +124,7 @@ class DKVMNCell(nn.Module):
 
         return self.value_memory
 
+
 class Net(nn.Module):
     def __init__(self, n_question, batch_size, key_embedding_dim, value_embedding_dim,
                  memory_size, key_memory_state_dim, value_memory_state_dim, final_fc_dim, student_num=None):
@@ -136,16 +140,16 @@ class Net(nn.Module):
         self.student_num = student_num
 
         self.input_embed_linear = nn.Linear(self.key_embedding_dim, self.final_fc_dim, bias=True)
-        self.read_embed_linear = nn.Linear(self.value_memory_state_dim + self.final_fc_dim, self.final_fc_dim, bias=True)
+        self.read_embed_linear = nn.Linear(self.value_memory_state_dim + self.final_fc_dim,
+                                           self.final_fc_dim, bias=True)
         self.predict_linear = nn.Linear(self.final_fc_dim, 1, bias=True)
         self.init_key_memory = nn.Parameter(torch.randn(self.memory_size, self.key_memory_state_dim))
         nn.init.kaiming_normal_(self.init_key_memory)
         self.init_value_memory = nn.Parameter(torch.randn(self.memory_size, self.value_memory_state_dim))
         nn.init.kaiming_normal_(self.init_value_memory)
 
-        self.mem = DKVMNCell(memory_size=self.memory_size,
-                   key_memory_state_dim=self.key_memory_state_dim,
-                   value_memory_state_dim=self.value_memory_state_dim, init_key_memory=self.init_key_memory)
+        self.mem = DKVMNCell(memory_size=self.memory_size, key_memory_state_dim=self.key_memory_state_dim,
+                             value_memory_state_dim=self.value_memory_state_dim, init_key_memory=self.init_key_memory)
 
         value_memory = nn.Parameter(torch.cat([self.init_value_memory.unsqueeze(0) for _ in range(batch_size)], 0).data)
         self.mem.init_value_memory(value_memory)
@@ -180,15 +184,15 @@ class Net(nn.Module):
         value_read_content_l = []
         input_embed_l = []
         for i in range(seqlen):
-            ## Attention
+            # Attention
             q = slice_q_embed_data[i].squeeze(1)
             correlation_weight = self.mem.attention(q)
 
-            ## Read Process
+            # Read Process
             read_content = self.mem.read(correlation_weight)
             value_read_content_l.append(read_content)
             input_embed_l.append(q)
-            ## Write Process
+            # Write Process
             qa = slice_qa_embed_data[i].squeeze(1)
             self.mem.write(correlation_weight, qa)
 
@@ -196,7 +200,7 @@ class Net(nn.Module):
         input_embed_content = torch.cat([input_embed_l[i].unsqueeze(1) for i in range(seqlen)], 1)
 
         predict_input = torch.cat([all_read_value_content, input_embed_content], 2)
-        read_content_embed = torch.tanh(self.read_embed_linear(predict_input.view(batch_size*seqlen, -1)))
+        read_content_embed = torch.tanh(self.read_embed_linear(predict_input.view(batch_size * seqlen, -1)))
 
         pred = self.predict_linear(read_content_embed)
         target_1d = target                   # [batch_size * seq_len, 1]
@@ -209,6 +213,7 @@ class Net(nn.Module):
 
         return loss, torch.sigmoid(filtered_pred), filtered_target
 
+
 class DKVMN(KTM):
     def __init__(self, n_question, batch_size, key_embedding_dim, value_embedding_dim,
                  memory_size, key_memory_state_dim, value_memory_state_dim, final_fc_dim, student_num=None):
@@ -216,8 +221,8 @@ class DKVMN(KTM):
         self.batch_size = batch_size
         self.n_question = n_question
         self.model = Net(n_question, batch_size, key_embedding_dim, value_embedding_dim,
-                 memory_size, key_memory_state_dim, value_memory_state_dim, final_fc_dim, student_num)
-    
+                         memory_size, key_memory_state_dim, value_memory_state_dim, final_fc_dim, student_num)
+
     def train_epoch(self, epoch, model, params, optimizer, q_data, qa_data):
         N = int(math.floor(len(q_data) / params['batch_size']))
 
@@ -260,7 +265,7 @@ class DKVMN(KTM):
         all_pred[all_pred < 0.5] = 0.0
         accuracy = metrics.accuracy_score(all_target, all_pred)
 
-        return epoch_loss/N, accuracy, auc
+        return epoch_loss / N, accuracy, auc
 
     def train(self, params, train_data, test_data=None):
         q_data, qa_data = train_data
@@ -282,8 +287,9 @@ class DKVMN(KTM):
 
         for idx in range(params['max_iter']):
             train_loss, train_accuracy, train_auc = self.train_epoch(idx, model, params, optimizer, q_data, qa_data)
-            print('Epoch %d/%d, loss : %3.5f, auc : %3.5f, accuracy : %3.5f' % (idx + 1, params['max_iter'], train_loss, train_auc, train_accuracy))
-            if test_data != None:
+            print('Epoch %d/%d, loss : %3.5f, auc : %3.5f, accuracy : %3.5f' %
+                  (idx + 1, params['max_iter'], train_loss, train_auc, train_accuracy))
+            if test_data is not None:
                 valid_loss, valid_accuracy, valid_auc = self.eval(params, test_data)
                 all_valid_loss[idx + 1] = valid_loss
                 all_valid_accuracy[idx + 1] = valid_accuracy
@@ -337,7 +343,7 @@ class DKVMN(KTM):
         accuracy = metrics.accuracy_score(all_target, all_pred)
         print('valid auc : %3.5f, valid accuracy : %3.5f' % (auc, accuracy))
 
-        return epoch_loss/N, accuracy, auc
+        return epoch_loss / N, accuracy, auc
 
     def save(self, filepath):
         torch.save(self.model.state_dict(), filepath)
@@ -346,4 +352,3 @@ class DKVMN(KTM):
     def load(self, filepath):
         self.model.load_state_dict(torch.load(filepath))
         logging.info("load parameters from %s" % filepath)
-        
