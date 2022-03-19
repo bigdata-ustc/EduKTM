@@ -271,7 +271,7 @@ class DKVMN(KTM):
         model.init_params()
         optimizer = torch.optim.Adam(params=model.parameters(), lr=params['lr'], betas=(0.9, 0.9))
 
-        model.cuda()
+        model.to(device)
 
         all_valid_loss = {}
         all_valid_accuracy = {}
