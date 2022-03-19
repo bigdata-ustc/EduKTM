@@ -6,7 +6,6 @@ from EduKTM import DKVMN
 from load_data import DATA
 
 params = {
-    'gpu': 0, # 'the gpu will be used, e.g "0,1,2,3"'
     'max_iter': 300, # 'number of iterations'
     'init_std': 0.1, # 'weight initialization std'
     'init_lr': 0.01, # 'initial learning rate'

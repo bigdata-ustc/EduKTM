@@ -10,7 +10,7 @@ import numpy as np
 @pytest.fixture(scope="package")
 def conf():
     n_question = 10
-    batch_size = 32
+    batch_size = 4
     return n_question, batch_size
 
 

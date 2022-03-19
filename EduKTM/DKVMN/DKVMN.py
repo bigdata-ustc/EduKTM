@@ -13,11 +13,7 @@ from tqdm import tqdm
 from EduKTM import KTM
 
 
-def varible(tensor, gpu):
-    if gpu >= 0:
-        return torch.autograd.Variable(tensor).cuda()
-    else:
-        return torch.autograd.Variable(tensor)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class Cell(nn.Module):
@@ -239,9 +235,9 @@ class DKVMN(KTM):
 
             target = (target - 1) / params['n_question']
             target = np.floor(target)
-            input_q = varible(torch.LongTensor(q_one_seq), params['gpu'])
-            input_qa = varible(torch.LongTensor(qa_batch_seq), params['gpu'])
-            target = varible(torch.FloatTensor(target), params['gpu'])
+            input_q = torch.LongTensor(q_one_seq).to(device)
+            input_qa = torch.LongTensor(qa_batch_seq).to(device)
+            target = torch.FloatTensor(target).to(device)
             target_to_1d = torch.chunk(target, params['batch_size'], 0)
             target_1d = torch.cat([target_to_1d[i] for i in range(params['batch_size'])], 1)
             target_1d = target_1d.permute(1, 0)
@@ -275,10 +271,7 @@ class DKVMN(KTM):
         model.init_params()
         optimizer = torch.optim.Adam(params=model.parameters(), lr=params['lr'], betas=(0.9, 0.9))
 
-        if params['gpu'] >= 0:
-            print('device: ' + str(params['gpu']))
-            torch.cuda.set_device(params['gpu'])
-            model.cuda()
+        model.cuda()
 
         all_valid_loss = {}
         all_valid_accuracy = {}
@@ -318,9 +311,9 @@ class DKVMN(KTM):
             target = (target - 1) / params['n_question']
             target = np.floor(target)
 
-            input_q = varible(torch.LongTensor(q_one_seq), params['gpu'])
-            input_qa = varible(torch.LongTensor(qa_batch_seq), params['gpu'])
-            target = varible(torch.FloatTensor(target), params['gpu'])
+            input_q = torch.LongTensor(q_one_seq).to(device)
+            input_qa = torch.LongTensor(qa_batch_seq).to(device)
+            target = torch.FloatTensor(target).to(device)
 
             target_to_1d = torch.chunk(target, params['batch_size'], 0)
             target_1d = torch.cat([target_to_1d[i] for i in range(params['batch_size'])], 1)

@@ -8,18 +8,16 @@ from EduKTM import DKVMN
 
 @pytest.mark.parametrize("lr", [0, 0.1])
 @pytest.mark.parametrize("maxgradnorm", [-5, 5])
-@pytest.mark.parametrize("gpu", [-1, 0])
-def test_train(data, conf, tmp_path, lr, maxgradnorm, gpu):
+def test_train(data, conf, tmp_path, lr, maxgradnorm):
     n_question, batch_size = conf
 
     params = {
-        'gpu': gpu,
-        'max_iter': 30,
+        'max_iter': 2,
         'lr': lr,
         'final_fc_dim': 5,
         'key_embedding_dim': 5,
         'batch_size': batch_size,
-        'value_embedding_dim': 20,
+        'value_embedding_dim': 10,
         'memory_size': 5,
         'n_question': n_question,
         'seqlen': 10,
