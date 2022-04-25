@@ -8,9 +8,6 @@ class DATA(object):
     def __init__(self, n_question, seqlen, separate_char):
         self.separate_char = separate_char
         self.n_question = n_question
-        """
-        self.seqlen = seqlen+1
-        """
         self.seqlen = seqlen
 
     ### data format

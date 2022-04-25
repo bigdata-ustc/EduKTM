@@ -25,10 +25,16 @@ class Cell(nn.Module):
     def addressing(self, control_input, memory):
         """
         Parameters
-            control_input:          Shape (batch_size, control_state_dim)
-            memory:                 Shape (memory_size, memory_state_dim)
+        ----------
+        control_input: tensor
+            embedding vector of input exercise, shape = (batch_size, control_state_dim)
+        memory: tensor
+            key memory, shape = (memory_size, memory_state_dim)
+
         Returns
-            correlation_weight:     Shape (batch_size, memory_size)
+        -------
+        correlation_weight: tensor
+            correlation weight, shape = (batch_size, memory_size)
         """
         similarity_score = torch.matmul(control_input, torch.t(memory))
         correlation_weight = F.softmax(similarity_score, dim=1)  # Shape: (batch_size, memory_size)
@@ -37,11 +43,16 @@ class Cell(nn.Module):
     def read(self, memory, read_weight):
         """
         Parameters
-            control_input:  Shape (batch_size, control_state_dim)
-            memory:         Shape (batch_size, memory_size, memory_state_dim)
-            read_weight:    Shape (batch_size, memory_size)
+        ----------
+        memory: tensor
+            value memory, shape = (batch_size, memory_size, memory_state_dim)
+        read_weight: tensor
+            correlation weight, shape = (batch_size, memory_size)
+
         Returns
-            read_content:   Shape (batch_size,  memory_state_dim)
+        -------
+        read_content: tensor
+            read content, shape = (batch_size, memory_size)
         """
         read_weight = read_weight.view(-1, 1)
         memory = memory.view(-1, self.memory_state_dim)
@@ -64,11 +75,18 @@ class WriteCell(Cell):
     def write(self, control_input, memory, write_weight):
         """
         Parameters
-            control_input:      Shape (batch_size, control_state_dim)
-            write_weight:       Shape (batch_size, memory_size)
-            memory:             Shape (batch_size, memory_size, memory_state_dim)
+        ----------
+        control_input: tensor
+            embedding vector of input exercise and students' answer, shape = (batch_size, control_state_dim)
+        memory: tensor
+            value memory, shape = (batch_size, memory_size, memory_state_dim)
+        read_weight: tensor
+            correlation weight, shape = (batch_size, memory_size)
+
         Returns
-            new_memory:         Shape (batch_size, memory_size, memory_state_dim)
+        -------
+        new_memory: tensor
+            updated value memory, shape = (batch_size, memory_size, memory_state_dim)
         """
         erase_signal = torch.sigmoid(self.erase(control_input))
         add_signal = torch.tanh(self.add(control_input))
@@ -86,10 +104,15 @@ class DKVMNCell(nn.Module):
         super(DKVMNCell, self).__init__()
         """
         Parameters
-            memory_size:             int
-            key_memory_state_dim:    int
-            value_memory_state_dim:  int
-            init_key_memory:         Shape (memory_size, value_memory_state_dim)
+        ----------
+        memory_size: int
+            size of memory
+        key_memory_state_dim: int
+            dimension of key memory
+        value_memory_state_dim:  int
+            dimension of value memory
+        init_key_memory: tensor
+            intial key memory
         """
         self.memory_size = memory_size
         self.key_memory_state_dim = key_memory_state_dim
