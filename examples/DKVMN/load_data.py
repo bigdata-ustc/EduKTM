@@ -4,7 +4,7 @@
 import numpy as np
 import math
 
-class DATA(object):
+class Data(object):
     def __init__(self, n_question, seqlen, separate_char):
         self.separate_char = separate_char
         self.n_question = n_question
@@ -18,15 +18,15 @@ class DATA(object):
         f_data = open(path , 'r')
         q_data = []
         qa_data = []
-        for lineID, line in enumerate(f_data):
+        for line_id, line in enumerate(f_data):
             line = line.strip( )
-            # lineID starts from 0
-            if lineID % 3 == 1:
+            # line_id starts from 0
+            if line_id % 3 == 1:
                 Q = line.split(self.separate_char)
                 if len( Q[len(Q)-1] ) == 0:
                     Q = Q[:-1]
                 #print(len(Q))
-            elif lineID % 3 == 2:
+            elif line_id % 3 == 2:
                 A = line.split(self.separate_char)
                 if len( A[len(A)-1] ) == 0:
                     A = A[:-1]
@@ -44,10 +44,10 @@ class DATA(object):
                     question_sequence = []
                     answer_sequence = []
                     if k == n_split - 1:
-                        endINdex  = len(A)
+                        end_index  = len(A)
                     else:
-                        endINdex = (k+1) * self.seqlen
-                    for i in range(k * self.seqlen, endINdex):
+                        end_index = (k+1) * self.seqlen
+                    for i in range(k * self.seqlen, end_index):
                         if len(Q[i]) > 0 :
                             # int(A[i]) is in {0,1}
                             Xindex = int(Q[i]) + int(A[i]) * self.n_question
@@ -61,14 +61,14 @@ class DATA(object):
         f_data.close()
         ### data: [[],[],[],...] <-- set_max_seqlen is used
         ### convert data into ndarrays for better speed during training
-        q_dataArray = np.zeros((len(q_data), self.seqlen))
+        q_data_array = np.zeros((len(q_data), self.seqlen))
         for j in range(len(q_data)):
             dat = q_data[j]
-            q_dataArray[j, :len(dat)] = dat
+            q_data_array[j, :len(dat)] = dat
 
-        qa_dataArray = np.zeros((len(qa_data), self.seqlen))
+        qa_data_array = np.zeros((len(qa_data), self.seqlen))
         for j in range(len(qa_data)):
             dat = qa_data[j]
-            qa_dataArray[j, :len(dat)] = dat
-        # dataArray: [ array([[],[],..])] Shape: (3633, 200)
-        return q_dataArray, qa_dataArray
+            qa_data_array[j, :len(dat)] = dat
+        # data_array: [ array([[],[],..])] Shape: (3633, 200)
+        return q_data_array, qa_data_array

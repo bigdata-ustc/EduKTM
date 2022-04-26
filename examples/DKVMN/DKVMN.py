@@ -3,7 +3,7 @@
 
 
 from EduKTM import DKVMN
-from load_data import DATA
+from load_data import Data
 
 params = {
     'max_iter': 300, # 'number of iterations'
@@ -30,7 +30,7 @@ params['lr'] = params['init_lr']
 params['key_memory_state_dim'] = params['key_embedding_dim']
 params['value_memory_state_dim'] = params['value_embedding_dim']
 
-dat = DATA(n_question=params['n_question'], seqlen=params['seqlen'], separate_char=',') 
+dat = Data(n_question=params['n_question'], seqlen=params['seqlen'], separate_char=',') 
 
 train_data_path = params['data_dir'] + "/" + params['data_name'] + "train.txt"
 test_data_path = params['data_dir'] + "/" + params['data_name'] + "test.txt"
