@@ -9,3 +9,4 @@ from .DKTPlus import DKTPlus
 from .AKT import AKT
 from .LPKT import LPKT
 from .GKT import GKT
+from .DKVMN import DKVMN
