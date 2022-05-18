@@ -1,5 +1,6 @@
 # coding: utf-8
 # 2022/2/25 @ fannazya
+# Code reused from https://github.com/tswsxk/Baize
 __all__ = ["GRUCell", "begin_states", "get_states", "expand_tensor",
            "mask_sequence_variable_length", "format_sequence"]
 
