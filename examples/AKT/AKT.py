@@ -31,5 +31,5 @@ akt.train(train_data, test_data, epoch=2)
 akt.save("akt.params")
 
 akt.load("akt.params")
-auc, accuracy, _ = akt.eval(test_data)
+_, auc, accuracy = akt.eval(test_data)
 print("auc: %.6f, accuracy: %.6f" % (auc, accuracy))
