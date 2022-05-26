@@ -3,7 +3,7 @@
 import logging
 import numpy as np
 import json
-from EduKTM import KPT
+from EduKTM import EKPT
 
 # Q matrix
 q_m = np.loadtxt("../../data/2009_skill_builder_data_corrected/q_m.csv", dtype=int, delimiter=",")
@@ -21,11 +21,11 @@ with open("../../data/2009_skill_builder_data_corrected/test_data.json", encodin
 
 logging.getLogger().setLevel(logging.INFO)
 
-cdm = KPT(q_m, stu_num, prob_num, know_num, time_window_num=time_window_num)
+cdm = EKPT(q_m, stu_num, prob_num, know_num, time_window_num=time_window_num)
 
 cdm.train(train_set, epoch=2, lr=0.001, lr_b=0.0001, epsilon=1e-3, init_method='mean')
-cdm.save("kpt.params")
+cdm.save("ekpt.params")
 
-cdm.load("kpt.params")
+cdm.load("ekpt.params")
 rmse, mae = cdm.eval(test_set)
-print("For KPT, RMSE: %.6f, MAE: %.6f" % (rmse, mae))
+print("For EKPT, RMSE: %.6f, MAE: %.6f" % (rmse, mae))

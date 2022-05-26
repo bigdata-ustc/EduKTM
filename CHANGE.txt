@@ -1,5 +1,17 @@
+v0.0.10:
+   * add DKVMN
+   * add GKT
+
+v0.0.9:
+   * fix bugs in DKT
+
+v0.0.8:
+   * add EKPT
+   * fix bugs in LPKT
+
 v0.0.7:
    * rename EduKTM.utils.torch_utils to EduKTM.utils.torch
+   * add LPKT
 
 v0.0.6:
    * add AKT

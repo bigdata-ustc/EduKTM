@@ -4,7 +4,7 @@
 
 # EduKTM
 [![PyPI](https://img.shields.io/pypi/v/EduKTM.svg)](https://pypi.python.org/pypi/EduKTM)
-[![test](https://github.com/bigdata-ustc/EduKTM/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/bigdata-ustc/EduKTM/actions/workflows/python-package.yml)
+[![test](https://github.com/bigdata-ustc/EduKTM/actions/workflows/python-test.yml/badge.svg?branch=main)](https://github.com/bigdata-ustc/EduKTM/actions/workflows/python-test.yml)
 [![codecov](https://codecov.io/gh/bigdata-ustc/EduKTM/branch/main/graph/badge.svg?token=B7gscOGQLD)](https://codecov.io/gh/bigdata-ustc/EduKTM)
 [![Download](https://img.shields.io/pypi/dm/EduKTM.svg?style=flat)](https://pypi.python.org/pypi/EduKTM)
 [![License](https://img.shields.io/github/license/bigdata-ustc/EduKTM)](LICENSE)
@@ -12,15 +12,17 @@
 
 The Model Zoo of Knowledge Tracing  Models.
 
-Knowledge Tracing (KT), which aims to monitor students’ evolving knowledge state, is a fundamental and crucial task to support these intelligent services. Therefore, an increasing amount of research attention has been paid to this emerging area and considerable progress has been made[1]. However, the code of these works may use different program languages (e.g., python, lua) and different deep learning frameworks (e.g., tensorflow, torch and mxnet). Furthermore, some works did not well organize the codes systemly (e.g., the missing of running environments and dependencies), which brings difficulties in reproducing the models. To this end, we put forward the Model Zoo of Knowledge Tracing Models, named EduKTM, which collects most of concurrent popular works.
-
 ## Brief introduction to KTM
+Knowledge Tracing (KT), which aims to monitor students’ evolving knowledge state, is a fundamental and crucial task to support these intelligent services. Therefore, an increasing amount of research attention has been paid to this emerging area and considerable progress has been made[1]. However, the code of these works may use different program languages (e.g., python, lua) and different deep learning frameworks (e.g., tensorflow, torch and mxnet). Furthermore, some works did not well organize the codes systemly (e.g., the missing of running environments and dependencies), which brings difficulties in reproducing the models. To this end, we put forward the Model Zoo of Knowledge Tracing Models, named EduKTM, which collects most of concurrent popular works.
 
 ## List of models
 
-* [KPT,EKPT](EduKTM/KPT) [[doc]](docs/KPT.md) [[example]](examples/KPT)
+* [KPT](EduKTM/KPT) [[doc]](docs/KPT.md) [[example]](examples/KPT)
+* [EKPT](EduKTM/EKPT) [[doc]](docs/EKPT.md) [[example]](examples/EKPT)
 * [DKT](EduKTM/DKT) [[doc]](docs/DKT.md) [[example]](examples/DKT)
 * [DKT+](EduKTM/DKTPlus) [[doc]](docs/DKT+.md) [[example]](examples/DKT+)
+* [DKVMN](EduKTM/DKVMN)[[doc]](docs/DKVMN.md) [[example]](examples/DKVMN)
+* [GKT](EduKTM/GKT)[[doc]](docs/GKT.md) [[example]](examples/GKT)
 * [AKT](EduKTM/AKT) [[doc]](docs/AKT.md) [[example]](examples/AKT)
 * [LPKT](EduKTM/LPKT) [[doc]](docs/LPKT.md) [[example]](examples/LPKT)
 

@@ -3,3 +3,4 @@
 
 from .extlib import *
 from .functional import *
+from .rnn import *

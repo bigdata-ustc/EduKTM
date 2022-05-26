@@ -8,7 +8,7 @@ test_deps = [
 
 setup(
     name='EduKTM',
-    version='0.0.7',
+    version='0.0.10',
     extras_require={
         'test': test_deps,
     },
@@ -19,6 +19,7 @@ setup(
         "numpy>=1.16.5",
         "scikit-learn",
         "pandas",
+        "networkx"
     ],  # And any other dependencies for needs
     entry_points={
     },
