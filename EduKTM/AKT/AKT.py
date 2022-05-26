@@ -188,12 +188,12 @@ class AKT(KTM):
         optimizer = torch.optim.Adam(self.akt_net.parameters(), lr=lr, betas=(0.0, 0.999), eps=1e-8)
 
         for idx in range(epoch):
-            train_loss, train_accuracy, train_acc = train_one_epoch(self.akt_net, self.params, optimizer, *train_data)
+            train_loss, train_auc, train_accuracy = train_one_epoch(self.akt_net, self.params, optimizer, *train_data)
             print("[Epoch %d] LogisticLoss: %.6f" % (idx, train_loss))
 
             if test_data is not None:
-                valid_loss, valid_accuracy, valid_acc = self.eval(test_data)
-                print("[Epoch %d] auc: %.6f, accuracy: %.6f" % (idx, valid_acc, valid_accuracy))
+                valid_loss, valid_auc, valid_accuracy = self.eval(test_data)
+                print("[Epoch %d] auc: %.6f, accuracy: %.6f" % (idx, valid_auc, valid_accuracy))
 
     def eval(self, test_data) -> ...:
         self.akt_net.eval()
