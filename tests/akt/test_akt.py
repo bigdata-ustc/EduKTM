@@ -17,6 +17,6 @@ def test_train(data, conf, tmp_path, maxgradnorm, separate_qa, kq_same):
 
     akt = AKT(n_question, n_pid, n_blocks, d_model, dropout, kq_same, l2, batch_size, maxgradnorm, separate_qa)
     akt.train(data, test_data=data, epoch=2)
-    filepath = tmp_path / "dkt+.params"
+    filepath = tmp_path / "akt.params"
     akt.save(filepath)
     akt.load(filepath)

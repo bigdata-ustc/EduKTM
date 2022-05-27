@@ -48,23 +48,22 @@ class DKT(KTM):
         optimizer = torch.optim.Adam(self.dkt_model.parameters(), lr)
 
         for e in range(epoch):
-            losses = []
+            all_pred, all_target = torch.Tensor([]), torch.Tensor([])
             for batch in tqdm.tqdm(train_data, "Epoch %s" % e):
                 integrated_pred = self.dkt_model(batch)
                 batch_size = batch.shape[0]
-                loss = torch.Tensor([0.0])
                 for student in range(batch_size):
                     pred, truth = process_raw_pred(batch[student], integrated_pred[student], self.num_questions)
-                    if pred.shape[0] != 0:
-                        loss += loss_function(pred, truth.float())
+                    all_pred = torch.cat([all_pred, pred])
+                    all_target = torch.cat([all_target, truth.float()])
 
-                # back propagation
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
+            loss = loss_function(all_pred, all_target)
+            # back propagation
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-                losses.append(loss.mean().item())
-            print("[Epoch %d] LogisticLoss: %.6f" % (e, float(np.mean(losses))))
+            print("[Epoch %d] LogisticLoss: %.6f" % (e, loss))
 
             if test_data is not None:
                 auc = self.eval(test_data)
