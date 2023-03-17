@@ -38,7 +38,7 @@ class GKTNet(nn.Module):
 
     def in_weight(self, x, ordinal=True, with_weight=True):
         if isinstance(x, torch.Tensor):
-            x = x.numpy().tolist()
+            x = x.cpu().numpy().tolist()
         if isinstance(x, list):
             return [self.in_weight(_x) for _x in x]
         elif isinstance(x, (int, float)):
@@ -57,7 +57,7 @@ class GKTNet(nn.Module):
 
     def out_weight(self, x, ordinal=True, with_weight=True):
         if isinstance(x, torch.Tensor):
-            x = x.numpy().tolist()
+            x = x.cpu().numpy().tolist()
         if isinstance(x, list):
             return [self.out_weight(_x) for _x in x]
         elif isinstance(x, (int, float)):
@@ -76,7 +76,7 @@ class GKTNet(nn.Module):
 
     def neighbors(self, x, ordinal=True, with_weight=False):
         if isinstance(x, torch.Tensor):
-            x = x.numpy().tolist()
+            x = x.cpu().numpy().tolist()
         if isinstance(x, list):
             return [self.neighbors(_x) for _x in x]
         elif isinstance(x, (int, float)):
@@ -95,10 +95,11 @@ class GKTNet(nn.Module):
 
     def forward(self, questions, answers, valid_length=None, compressed_out=True, layout="NTC"):
         length = questions.shape[1]
+        device = questions.device
         inputs, axis, batch_size = format_sequence(length, questions, layout, False)
         answers, _, _ = format_sequence(length, answers, layout, False)
-
         states = begin_states([(batch_size, self.ku_num, self.hidden_num)])[0]
+        states = states.to(device)
         outputs = []
         all_states = []
         for i in range(length):
@@ -107,8 +108,8 @@ class GKTNet(nn.Module):
             answer_i = answers[i].reshape([batch_size, ])
 
             _neighbors = self.neighbors(inputs_i)
-            neighbors_mask = expand_tensor(torch.Tensor(_neighbors), -1, self.hidden_num)
-            _neighbors_mask = expand_tensor(torch.Tensor(_neighbors), -1, self.hidden_num + self.latent_dim)
+            neighbors_mask = expand_tensor(torch.tensor(_neighbors, device=device), -1, self.hidden_num)
+            _neighbors_mask = expand_tensor(torch.tensor(_neighbors, device=device), -1, self.hidden_num + self.latent_dim)
 
             # get concept embedding
             concept_embeddings = self.concept_embedding.weight.data
@@ -133,8 +134,8 @@ class GKTNet(nn.Module):
 
             _in_state = self.n_in(_hidden_states)
             _out_state = self.n_out(_hidden_states)
-            in_weight = expand_tensor(torch.Tensor(self.in_weight(inputs_i)), -1, self.hidden_num)
-            out_weight = expand_tensor(torch.Tensor(self.out_weight(inputs_i)), -1, self.hidden_num)
+            in_weight = expand_tensor(torch.tensor(self.in_weight(inputs_i), device=device), -1, self.hidden_num)
+            out_weight = expand_tensor(torch.tensor(self.out_weight(inputs_i), device=device), -1, self.hidden_num)
 
             next_neighbors_states = in_weight * _in_state + out_weight * _out_state
 
