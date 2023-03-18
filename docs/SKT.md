@@ -1,6 +1,6 @@
 # Structure-based Knowledge Tracing (SKT)
 
-If the reader wants to know the details of SKT, please refer to the Appendix of the paper: *[Structure-based Knowledge Tracing: An Influence Propagation View](https://rlgm.github.io/papers/70.pdf)*.
+If the reader wants to know the details of SKT, please refer to the Appendix of the paper: *[Structure-based Knowledge Tracing: An Influence Propagation View](http://staff.ustc.edu.cn/~huangzhy/files/papers/ShiweiTong-ICDM2020.pdf)*.
 
 ```bibtex
 @inproceedings{tong2020structure,
