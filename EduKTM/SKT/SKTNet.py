@@ -80,7 +80,6 @@ class SKTNet(nn.Module):
         states = begin_states([(batch_size, self.ku_num, self.hidden_num)])[0]
         states = states.to(device)
         outputs = []
-        all_states = []
         for i in range(length):
             inputs_i = inputs[i].reshape([batch_size, ])
             answer_i = answers[i].reshape([batch_size, ])
@@ -164,8 +163,8 @@ class SKTNet(nn.Module):
             output = self.sigmoid(torch.squeeze(
                 self.out(self.dropout(states)), axis=-1))
             outputs.append(output)
-            if valid_length is not None and not compressed_out:
-                all_states.append([states])
+            # if valid_length is not None and not compressed_out:
+            #     all_states.append([states])
 
         if valid_length is not None:
             if compressed_out:

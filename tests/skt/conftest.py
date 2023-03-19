@@ -32,3 +32,29 @@ def graphs(tmpdir_factory):
         json.dump([[1, 2, 0.9], [1, 5, 0.1]], wf)
     _graphs.append([graph_dir, True, 0.5])
     return _graphs
+
+
+@pytest.fixture(scope="session")
+def graphs_2(tmpdir_factory):
+    graph_dir = tmpdir_factory.mktemp("data").join("graph_3.json")
+    _graphs = []
+    with open(graph_dir, 'w') as wf:
+        json.dump([[0, 1], [0, 2]], wf)
+    _graphs.append((graph_dir, False))
+    _graphs.append([graph_dir, True])
+    graph_dir = tmpdir_factory.mktemp("data").join("graph_4.json")
+    with open(graph_dir, 'w') as wf:
+        json.dump([[1, 2, 0.9], [1, 5, 0.1]], wf)
+    _graphs.append([graph_dir, True, -1])
+    return _graphs
+
+
+@pytest.fixture(scope="session")
+def graphs_3(tmpdir_factory):
+    graph_dir = tmpdir_factory.mktemp("data").join("graph_5.json")
+    _graphs = []
+    with open(graph_dir, 'w') as wf:
+        json.dump([], wf)
+    _graphs.append((graph_dir, False))
+    _graphs.append([graph_dir, True])
+    return _graphs
