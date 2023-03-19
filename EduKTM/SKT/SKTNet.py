@@ -156,8 +156,7 @@ class SKTNet(nn.Module):
             # )
 
             # aggregate
-            _inf = self.f_agg(self.alpha * _sync_inf
-                              + (1 - self.alpha) * _prop_inf)
+            _inf = self.f_agg(self.alpha * _sync_inf + (1 - self.alpha) * _prop_inf)
             next_states, _ = self.rnn(_inf, [states])
             # next_states, _ = self.rnn(torch.concat((_inf, concept_embeddings), dim=-1), [states])
             # states = (1 - _self_mask) * next_states + _self_mask * _broadcast_next_self_states
