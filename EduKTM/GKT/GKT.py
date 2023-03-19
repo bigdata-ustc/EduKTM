@@ -27,7 +27,7 @@ class GKT(KTM):
         loss_function = SLMLoss(**self.loss_params).to(device)
         self.gkt_model = self.gkt_model.to(device)
         trainer = torch.optim.Adam(self.gkt_model.parameters(), lr)
-        
+
         for e in range(epoch):
             losses = []
             for (question, data, data_mask, label, pick_index, label_mask) in tqdm(train_data, "Epoch %s" % e):
@@ -40,9 +40,11 @@ class GKT(KTM):
                 label_mask: torch.Tensor = label_mask.to(device)
 
                 # real training
-                predicted_response, _ = self.gkt_model(question, data, data_mask)
+                predicted_response, _ = self.gkt_model(
+                    question, data, data_mask)
 
-                loss = loss_function(predicted_response, pick_index, label, label_mask)
+                loss = loss_function(predicted_response,
+                                     pick_index, label, label_mask)
 
                 # back propagation
                 trainer.zero_grad()
@@ -54,7 +56,8 @@ class GKT(KTM):
 
             if test_data is not None:
                 auc, accuracy = self.eval(test_data, device=device)
-                print("[Epoch %d] auc: %.6f, accuracy: %.6f" % (e, auc, accuracy))
+                print("[Epoch %d] auc: %.6f, accuracy: %.6f" %
+                      (e, auc, accuracy))
 
     def eval(self, test_data, device="cpu") -> tuple:
         self.gkt_model.eval()

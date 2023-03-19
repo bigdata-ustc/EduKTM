@@ -5,7 +5,6 @@ __all__ = ["SKTNet"]
 
 import torch
 import torch.nn as nn
-from torch import nn
 import torch.nn.functional as F
 from EduKTM.utils import GRUCell, begin_states, get_states, expand_tensor, \
     format_sequence, mask_sequence_variable_length
@@ -157,8 +156,8 @@ class SKTNet(nn.Module):
             # )
 
             # aggregate
-            _inf = self.f_agg(self.alpha * _sync_inf +
-                              (1 - self.alpha) * _prop_inf)
+            _inf = self.f_agg(self.alpha * _sync_inf
+                              + (1 - self.alpha) * _prop_inf)
             next_states, _ = self.rnn(_inf, [states])
             # next_states, _ = self.rnn(torch.concat((_inf, concept_embeddings), dim=-1), [states])
             # states = (1 - _self_mask) * next_states + _self_mask * _broadcast_next_self_states
