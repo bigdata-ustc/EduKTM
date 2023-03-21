@@ -13,8 +13,6 @@ def as_list(obj) -> list:
         return obj
     elif isinstance(obj, tuple):
         return list(obj)
-    else:
-        return [obj]
 
 
 def begin_states(shapes, func=torch.zeros):
@@ -32,8 +30,6 @@ def get_states(indexes, states):
         return torch.stack([*[get_states(index, state) for (index, state) in zip(indexes, states)]])
     elif isinstance(indexes, (int, float)):
         return states[int(indexes)]
-    else:
-        raise TypeError("cannot handle %s" % type(indexes))
 
 
 def sequence_mask(X, valid_len, value):
@@ -45,8 +41,7 @@ def sequence_mask(X, valid_len, value):
     return X
 
 
-def mask_sequence_variable_length(F, data, length, valid_length, time_axis,
-                                  merge):
+def mask_sequence_variable_length(F, data, valid_length):
     assert valid_length is not None
     if not isinstance(data, torch.Tensor):
         data = F.stack([*data], dim=1)
@@ -54,12 +49,6 @@ def mask_sequence_variable_length(F, data, length, valid_length, time_axis,
         data, valid_len=valid_length,
         value=0
     )
-    if not merge:
-        outputs = as_list(
-            F.split(
-                outputs, split_size_or_sections=length, axis=time_axis
-            )
-        )
     return outputs
 
 
