@@ -169,7 +169,6 @@ class SKTNet(nn.Module):
         if valid_length is not None:
             if compressed_out:
                 states = None
-            outputs = mask_sequence_variable_length(
-                torch, outputs, length, valid_length, axis, merge=True)
+            outputs = mask_sequence_variable_length(torch, outputs, valid_length)
 
         return outputs, states

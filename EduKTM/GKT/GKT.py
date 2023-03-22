@@ -24,8 +24,7 @@ class GKT(KTM):
         self.loss_params = loss_params if loss_params is not None else {}
 
     def train(self, train_data, test_data=None, *, epoch: int, device="cpu", lr=0.001) -> ...:
-        loss_function = SLMLoss(**self.loss_params).to(device)
-        self.gkt_model = self.gkt_model.to(device)
+        loss_function = SLMLoss(**self.loss_params)
         trainer = torch.optim.Adam(self.gkt_model.parameters(), lr)
 
         for e in range(epoch):
@@ -40,11 +39,9 @@ class GKT(KTM):
                 label_mask: torch.Tensor = label_mask.to(device)
 
                 # real training
-                predicted_response, _ = self.gkt_model(
-                    question, data, data_mask)
+                predicted_response, _ = self.gkt_model(question, data, data_mask)
 
-                loss = loss_function(predicted_response,
-                                     pick_index, label, label_mask)
+                loss = loss_function(predicted_response, pick_index, label, label_mask)
 
                 # back propagation
                 trainer.zero_grad()
@@ -55,9 +52,8 @@ class GKT(KTM):
             print("[Epoch %d] SLMoss: %.6f" % (e, float(np.mean(losses))))
 
             if test_data is not None:
-                auc, accuracy = self.eval(test_data, device=device)
-                print("[Epoch %d] auc: %.6f, accuracy: %.6f" %
-                      (e, auc, accuracy))
+                auc, accuracy = self.eval(test_data)
+                print("[Epoch %d] auc: %.6f, accuracy: %.6f" % (e, auc, accuracy))
 
     def eval(self, test_data, device="cpu") -> tuple:
         self.gkt_model.eval()
@@ -79,7 +75,7 @@ class GKT(KTM):
             output = pick(output, pick_index.to(output.device))
             pred = tensor2list(output)
             label = tensor2list(label)
-            for i, length in enumerate(label_mask.cpu().tolist()):
+            for i, length in enumerate(label_mask.numpy().tolist()):
                 length = int(length)
                 y_true.extend(label[i][:length])
                 y_pred.extend(pred[i][:length])
