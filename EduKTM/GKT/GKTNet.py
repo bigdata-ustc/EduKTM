@@ -46,18 +46,10 @@ class GKTNet(nn.Module):
         if isinstance(x, list):
             return [self.in_weight(_x) for _x in x]
         elif isinstance(x, (int, float)):
-            if not ordinal:
-                return list(self.graph.predecessors(int(x)))
-            else:
-                _ret = [0] * self.ku_num
-                for i in self.graph.predecessors(int(x)):
-                    if with_weight:
-                        _ret[i] = self.graph[i][x]['weight']
-                    else:
-                        _ret[i] = 1
-                return _ret
-        else:
-            raise TypeError("cannot handle %s" % type(x))
+            _ret = [0] * self.ku_num
+            for i in self.graph.predecessors(int(x)):
+                _ret[i] = 1
+            return _ret
 
     def out_weight(self, x, ordinal=True, with_weight=True):
         if isinstance(x, torch.Tensor):
@@ -65,18 +57,10 @@ class GKTNet(nn.Module):
         if isinstance(x, list):
             return [self.out_weight(_x) for _x in x]
         elif isinstance(x, (int, float)):
-            if not ordinal:
-                return list(self.graph.successors(int(x)))
-            else:
-                _ret = [0] * self.ku_num
-                for i in self.graph.successors(int(x)):
-                    if with_weight:
-                        _ret[i] = self.graph[x][i]['weight']
-                    else:
-                        _ret[i] = 1
-                return _ret
-        else:
-            raise TypeError("cannot handle %s" % type(x))
+            _ret = [0] * self.ku_num
+            for i in self.graph.successors(int(x)):
+                _ret[i] = 1
+            return _ret
 
     def neighbors(self, x, ordinal=True, with_weight=False):
         if isinstance(x, torch.Tensor):
@@ -84,18 +68,10 @@ class GKTNet(nn.Module):
         if isinstance(x, list):
             return [self.neighbors(_x) for _x in x]
         elif isinstance(x, (int, float)):
-            if not ordinal:
-                return list(self.graph.neighbors(int(x)))
-            else:
-                _ret = [0] * self.ku_num
-                for i in self.graph.neighbors(int(x)):
-                    if with_weight:
-                        _ret[i] = self.graph[i][x]['weight']
-                    else:
-                        _ret[i] = 1
-                return _ret
-        else:
-            raise TypeError("cannot handle %s" % type(x))
+            _ret = [0] * self.ku_num
+            for i in self.graph.neighbors(int(x)):
+                _ret[i] = 1
+            return _ret
 
     def forward(self, questions, answers, valid_length=None, compressed_out=True, layout="NTC"):
         length = questions.shape[1]
@@ -106,7 +82,6 @@ class GKTNet(nn.Module):
         states = begin_states([(batch_size, self.ku_num, self.hidden_num)])[0]
         states = states.to(device)
         outputs = []
-        all_states = []
         for i in range(length):
             # neighbors - aggregate
             inputs_i = inputs[i].reshape([batch_size, ])
@@ -166,13 +141,11 @@ class GKTNet(nn.Module):
             states = self.dropout(next_states)
             output = torch.sigmoid(self.out(states).squeeze(axis=-1))  # p
             outputs.append(output)
-            if valid_length is not None and not compressed_out:
-                all_states.append([states])
 
         if valid_length is not None:
             if compressed_out:
                 states = None
-            outputs = mask_sequence_variable_length(
-                torch, outputs, length, valid_length, axis, merge=True)
+            outputs = mask_sequence_variable_length(torch, outputs, valid_length)
+
 
         return outputs, states
