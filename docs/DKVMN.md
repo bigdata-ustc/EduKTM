@@ -1,5 +1,14 @@
 # Dynamic Key-Value Memory Networks for Knowledge Tracing(DKVMN)
 
+## Introduction
+
+Dynamic Key-Value Memory Networks (DKVMN) can exploit the relationships between underlying concepts and directly output a student’s mastery level of each concept. Unlike standard memory-augmented neural networks that facilitate a single memory matrix or two static memory matrices, DKVMN has one static matrix called key, which stores the knowledge concepts and the other dynamic matrix called value, which stores and updates the mastery levels of corresponding concepts.
+
+## Model
+
+![model](_static/DKVMN.png)
+
+
 If the reader wants to know the details of DKVMN, please refer to the Appendix of the paper: *[Dynamic Key-Value Memory Networks for Knowledge Tracing](https://arxiv.org/pdf/1611.08108v1.pdf)*.
 
 ```bibtex
