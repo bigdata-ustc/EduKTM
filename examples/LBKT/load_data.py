@@ -105,4 +105,5 @@ class DATA(object):
             dat = hint_data[j]
             hint_dataArray[j, :len(dat)] = dat
 
-        return e_dataArray, a_dataArray, time_dataArray, attempt_dataArray, hint_dataArray
+        return e_dataArray, a_dataArray, time_dataArray, \
+            attempt_dataArray, hint_dataArray

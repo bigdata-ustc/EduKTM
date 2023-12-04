@@ -1,12 +1,10 @@
 # coding: utf-8
 # 2023/11/21 @ xubihan
-
 import numpy as np
 from load_data import DATA
-
-import sys
-sys.path.append('../..')
 from EduKTM import LBKT
+import logging
+
 
 def generate_q_matrix(path, n_skill, n_problem, gamma=0):
     with open(path, 'r', encoding='utf-8') as f:
@@ -22,12 +20,11 @@ n_question = 123
 memory_size = n_question + 1
 n_exercises = 17751
 
-
 seqlen = 100
 dim_tp = 128
 num_resps = 2
 num_units = 128
-dropout  = 0.2 
+dropout = 0.2
 dim_hidden = 50
 batch_size = 8
 q_gamma = 0.1
@@ -42,10 +39,10 @@ q_matrix = generate_q_matrix(
     q_gamma
 )
 
-import logging
 logging.getLogger().setLevel(logging.INFO)
 
-lbkt = LBKT(n_exercises,dim_tp, num_resps,num_units, dropout,dim_hidden,memory_size,batch_size,q_matrix)
+lbkt = LBKT(n_exercises, dim_tp, num_resps, num_units, dropout,
+            dim_hidden, memory_size, batch_size, q_matrix)
 lbkt.train(train_data, test_data, epoch=2, lr=0.001)
 lbkt.save("lbkt.params")
 

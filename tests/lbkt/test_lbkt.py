@@ -13,8 +13,9 @@ def test_train(data, conf, tmp_path):
     dropout = 0.2
     memory_size = n_question + 1
 
-    lbkt = LBKT(n_exercise,dim_tp, num_resps,num_units, dropout,dim_hidden,memory_size,batch_size,q_matrix)
-    lbkt.train(data, test_data=data, epoch=2,lr=0.005)
+    lbkt = LBKT(n_exercise, dim_tp, num_resps, num_units,
+                dropout, dim_hidden, memory_size, batch_size, q_matrix)
+    lbkt.train(data, test_data=data, epoch=2, lr=0.001)
     filepath = tmp_path / "lbkt.params"
     lbkt.save(filepath)
     lbkt.load(filepath)
